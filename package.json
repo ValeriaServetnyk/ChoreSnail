@@ -9,7 +9,10 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@emotion/react": "^11.9.3",
+    "dotenv-safe": "^8.2.0",
     "next": "12.1.6",
+    "postgres": "^3.2.4",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "sharp": "^0.30.7"
