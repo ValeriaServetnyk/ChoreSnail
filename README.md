@@ -14,21 +14,62 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 
 You can start editing the page by modifying `pages/index.js`. The page auto-updates as you edit the file.
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.js`.
+## Database Setup
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+Copy the .env.example file to a new file called .env (ignored from Git) and fill in the necessary information.
 
-## Learn More
+Follow the instructions from the PostgreSQL step in UpLeveled's System Setup Instructions.
 
-To learn more about Next.js, take a look at the following resources:
+Then, connect to the built-in postgres database as administrator in order to create the database:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+# Windows
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+If it asks for a password, use postgres.
 
-## Deploy on Vercel
+psql -U postgres
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+# macOS
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+psql postgres
+
+# Linux
+
+sudo -u postgres psql
+
+Once you have connected, run the following to create the database:
+
+CREATE DATABASE <database name>;
+CREATE USER <user name> WITH ENCRYPTED PASSWORD '<user password>';
+GRANT ALL PRIVILEGES ON DATABASE <database name> TO <user name>;
+
+Quit psql using the following command:
+
+\q
+
+On Linux, you will also need to create a Linux system user with a name matching the user name you used in the database. It will prompt you to create a password for the user - choose the same password as for the database above.
+
+sudo adduser <user name>
+
+Once you're ready to use the new user, reconnect using the following command.
+
+# Windows and macOS:
+
+psql -U <user name> <database name>
+
+# Linux:
+
+sudo -u <user name> psql -U <user name> <database name>
+
+## API Design
+
+Base URL (development): http://localhost:3000/api/
+
+Reading all users: GET /animals ===> api/participants/index.js
+
+Creating a new user: POST /animals ===> api/participants/index.js
+
+Reading a single user: GET /animals/:id ===> api/participants/[participantid].js
+
+Deleting a user: DELETE /animals/:id ===> api/participants/[participantid].js
+
+Updating a user: PUT /animals/:id ===> api/participants/[participantid].js
