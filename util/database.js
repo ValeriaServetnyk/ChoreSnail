@@ -82,7 +82,7 @@ SELECT * from projects`;
 
 export async function getProjectById(id) {
   const [project] = await sql`
-SELECT * from projects
+SELECT * FROM projects
 WHERE id = ${id}`;
   return camelcaseKeys(project);
 }
@@ -112,4 +112,47 @@ project_name= ${projectName}
 WHERE id=${id}
  RETURNING *`;
   return camelcaseKeys(project);
+}
+
+// backend for user registration
+
+export async function createUser(username, passwordHash) {
+  const [user] = await sql`
+INSERT INTO users
+(username, password_hash)
+VALUES (${username}, ${passwordHash})
+ RETURNING
+ id,
+ username`;
+  return camelcaseKeys(user);
+}
+
+export async function getUserByUsername(username) {
+  if (!username) return undefined;
+
+  const [user] = await sql`
+SELECT id, username
+FROM users
+WHERE username = ${username}`;
+  return user && camelcaseKeys(user);
+}
+
+export async function getUserWithPasswordHashByUsername(username) {
+  if (!username) return undefined;
+
+  const [user] = await sql`
+SELECT *
+FROM users
+WHERE username = ${username}`;
+  return user && camelcaseKeys(user);
+}
+
+export async function getUserById(userId) {
+  if (!userId) return undefined;
+
+  const [user] = await sql`
+SELECT id, username
+FROM users
+WHERE id = ${userId}`;
+  return user && camelcaseKeys(user);
 }

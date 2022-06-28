@@ -1,16 +1,15 @@
 exports.up = async (sql) => {
-	await sql`
+  await sql`
 CREATE TABLE users (
 	id integer PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
-	user_name varchar(40) NOT NULL,
-	user_password varchar(40) NOT NULL,
-	email varchar(40) NOT NULL
+	username varchar(80) NOT NULL UNIQUE,
+	password_hash varchar(80) NOT NULL
 )
 	`;
-}
+};
 
 exports.down = async (sql) => {
-await sql`
+  await sql`
 DROP TABLE users
 `;
-}
+};
