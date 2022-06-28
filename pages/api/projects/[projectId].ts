@@ -1,3 +1,4 @@
+import { NextApiRequest, NextApiResponse } from 'next';
 import {
   deleteProjectById,
   getProjectById,
@@ -6,7 +7,10 @@ import {
 
 // connecting to API method GETbyId PUT and DELETE
 
-export default async function handler(req, res) {
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse,
+) {
   const projectId = req.query.projectId;
 
   if (!projectId) {

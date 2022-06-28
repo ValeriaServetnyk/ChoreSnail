@@ -1,7 +1,7 @@
 // import { GetServerSidePropsContext } from 'next';
 import Head from 'next/head';
 import Link from 'next/link';
-import { getUserByUsername } from '../../util/database';
+import { getUserByValidSessionToken } from '../../util/database';
 
 export default function UserDashboard(props) {
   if (!props.user) {
@@ -42,7 +42,7 @@ export default function UserDashboard(props) {
         <div>username: {props.user.username}</div>
         <h1>My past projects</h1>
         <h1>My added chores</h1>
-        <Link href="/projects">
+        <Link href="/">
           <a>Create new project</a>
         </Link>
         <Link href="/login">
@@ -54,20 +54,21 @@ export default function UserDashboard(props) {
 }
 
 export async function getServerSideProps(context) {
-  const usernameFromUrl = context.query.username;
-  if (!usernameFromUrl || Array.isArray(usernameFromUrl)) {
-    return { props: {} };
-  }
-  const user = await getUserByUsername(usernameFromUrl);
+  const user = await getUserByValidSessionToken(
+    context.req.cookies.sessionToken,
+  );
 
-  if (!user) {
-    context.res.statusCode = 404;
-    return { props: {} };
+  if (user) {
+    return {
+      props: {
+        user: user,
+      },
+    };
   }
-
   return {
-    props: {
-      user: user,
+    redirect: {
+      destination: `/login?returnTo=/users/private-profile`,
+      permanent: false,
     },
   };
 }

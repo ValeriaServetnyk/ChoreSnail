@@ -1,6 +1,6 @@
 import Head from 'next/head';
 import Link from 'next/link';
-import { getChores } from '../util/database';
+import { getChores, getUserByValidSessionToken } from '../util/database';
 
 export default function Chores(props) {
   return (
@@ -37,11 +37,23 @@ export default function Chores(props) {
   );
 }
 
-export async function getServerSideProps() {
+export async function getServerSideProps(context) {
   const chores = await getChores();
+  const user = await getUserByValidSessionToken(
+    context.req.cookies.sessionToken,
+  );
+
+  if (user) {
+    return {
+      props: {
+        chores: chores,
+      },
+    };
+  }
   return {
-    props: {
-      chores: chores,
+    redirect: {
+      destination: `/login?returnTo=/chores`,
+      permanent: false,
     },
   };
 }

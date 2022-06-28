@@ -12,7 +12,8 @@ export default function Header(props) {
       {props.user && (
         <Link href="/users/private-profile">{props.user.username}</Link>
       )}
-      {/* {props.user ? (
+
+      {props.user ? (
         // using a instead of Link since we want to force a full refresh
         <a href="/logout">Logout</a>
       ) : (
@@ -20,7 +21,7 @@ export default function Header(props) {
           <Link href="/signup">Signup</Link>
           <Link href="/login">Login</Link>
         </>
-      )} */}
+      )}
     </header>
   );
 }

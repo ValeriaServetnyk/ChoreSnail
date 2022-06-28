@@ -156,3 +156,55 @@ FROM users
 WHERE id = ${userId}`;
   return user && camelcaseKeys(user);
 }
+
+export async function deleteSessionByToken(token) {
+  const [session] = await sql`
+  DELETE FROM sessions
+  WHERE
+ sessions.token = ${token}
+ RETURNING *
+ `;
+  return session && camelcaseKeys(session);
+}
+
+export async function deleteExpiredSessions() {
+  const sessions = await sql`
+  DELETE FROM
+    sessions
+  WHERE
+    expiry_timestamp < now()
+  RETURNING *
+  `;
+  return sessions.map((session) => camelcaseKeys(session));
+}
+
+export async function createSession(token, userId) {
+  const [session] = await sql`
+  INSERT INTO sessions
+  (token, user_id)
+  VALUES (${token}, ${userId})
+   RETURNING
+   id,
+   token`;
+  await deleteExpiredSessions();
+
+  return camelcaseKeys(session);
+}
+
+export async function getUserByValidSessionToken(token) {
+  if (!token) return undefined;
+  const [user] = await sql`
+  SELECT
+  users.id,
+  users.username
+  FROM
+  users,
+  sessions
+  WHERE
+ sessions.token = ${token} AND
+ sessions.user_id = users.id AND
+ sessions.expiry_timestamp > now();
+  `;
+  await deleteExpiredSessions();
+  return user && camelcaseKeys(user);
+}

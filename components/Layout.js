@@ -1,11 +1,11 @@
-import Image from 'next/image';
-import Link from 'next/link';
+// import Image from 'next/image';
+// import Link from 'next/link';
 import Header from './Header';
 
 export default function Layout(props) {
   return (
     <div>
-      <Header />
+      <Header user={props.user} refreshUserProfile={props.refreshUserProfile} />
       <div>{props.children}</div>
       <footer>All rights reserved</footer>
     </div>

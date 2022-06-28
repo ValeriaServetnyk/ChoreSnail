@@ -1,6 +1,7 @@
 import Head from 'next/head';
 import Link from 'next/link';
 import { Fragment, useEffect, useState } from 'react';
+import { getUserByValidSessionToken } from '../util/database';
 
 // frontend for API participants
 
@@ -223,6 +224,23 @@ export default function AddParticipants() {
   );
 }
 
+export async function getServerSideProps(context) {
+  const user = await getUserByValidSessionToken(
+    context.req.cookies.sessionToken,
+  );
+
+  if (user) {
+    return {
+      props: {},
+    };
+  }
+  return {
+    redirect: {
+      destination: `/login?returnTo=/participants`,
+      permanent: false,
+    },
+  };
+}
 // export async function getServerSideProps() {
 //   const chores = await getParticipants();
 //   return {

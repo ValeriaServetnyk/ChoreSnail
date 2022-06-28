@@ -3,10 +3,14 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 
-export default function Login() {
+type Props = {
+  refreshUserProfile: () => Promise<void>;
+};
+
+export default function Login(props: Props) {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [errors, setErrors] = useState([]);
+  const [errors, setErrors] = useState<{ message: string }[]>([]);
 
   const router = useRouter();
 
@@ -38,11 +42,12 @@ export default function Login() {
       // validate returnTo parameter against valid path
       /^\/[a-zA-Z0-9-?=/]*$/.test(returnTo)
     ) {
+      await props.refreshUserProfile();
       await router.push(returnTo);
     } else {
       // redirect to user profile
-
       // by username
+      await props.refreshUserProfile();
       await router.push(`/users/${loginResponseBody.user.username}`);
     }
 

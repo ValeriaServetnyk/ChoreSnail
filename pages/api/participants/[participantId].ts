@@ -1,3 +1,4 @@
+import { NextApiRequest, NextApiResponse } from 'next';
 import {
   deleteParticipantById,
   getParticipantById,
@@ -6,7 +7,10 @@ import {
 
 // connecting to API method GETbyId PUT and DELETE
 
-export default async function handler(req, res) {
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse,
+) {
   const participantId = req.query.participantId;
 
   if (!participantId) {
@@ -23,7 +27,11 @@ export default async function handler(req, res) {
   }
 
   if (req.method === 'PUT') {
-    if (!participantId || !req.body.participantName || !req.body.participantEmail) {
+    if (
+      !participantId ||
+      !req.body.participantName ||
+      !req.body.participantEmail
+    ) {
       return res
         .status(400)
         .json({ error: 'need to add valid id name and email' });

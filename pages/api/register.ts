@@ -1,17 +1,27 @@
+import crypto from 'node:crypto';
 import bcrypt from 'bcrypt';
-import { createUser, getUserByUsername } from '../../util/database';
+import { NextApiRequest, NextApiResponse } from 'next';
+import { createSerializedRegisterSessionTokenCookie } from '../../util/cookies';
+import {
+  createSession,
+  createUser,
+  getUserByUsername,
+} from '../../util/database';
 
 // api route to store user registration info. Backend for signup page
 
-// type RegisterResponseBody =
-// | {
-//   errors: {
-//     message:string:
-//   }[];
-// }
-// | { user: {id:number}};
+export type RegisterResponseBody =
+  | {
+      errors: {
+        message: string;
+      }[];
+    }
+  | { user: { id: number; username: string } };
 
-export default async function handler(req, res) {
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse<RegisterResponseBody>,
+) {
   // method must be post
   if (req.method === 'POST') {
     if (
@@ -35,10 +45,20 @@ export default async function handler(req, res) {
     // create new user
     const newUser = await createUser(req.body.username, passwordHash);
 
+    const token = crypto.randomBytes(80).toString('base64');
+
+    const session = await createSession(token, newUser.id);
+
+    const serializedCookie = await createSerializedRegisterSessionTokenCookie(
+      session.token,
+    );
+
     res
       .status(200)
+      .setHeader('set-Cookie', serializedCookie)
       .json({ user: { id: newUser.id, username: newUser.username } });
   } else {
     res.status(405).json({ errors: [{ message: 'method not allowed' }] });
+    return;
   }
 }

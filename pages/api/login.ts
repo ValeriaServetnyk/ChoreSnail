@@ -1,17 +1,26 @@
+import crypto from 'node:crypto';
 import bcrypt from 'bcrypt';
-import { getUserWithPasswordHashByUsername } from '../../util/database';
+import { NextApiRequest, NextApiResponse } from 'next';
+import { createSerializedRegisterSessionTokenCookie } from '../../util/cookies';
+import {
+  createSession,
+  getUserWithPasswordHashByUsername,
+} from '../../util/database';
 
-// api route to store user registration info. Backend for signup page
+// api route to authorise the user based on the registration info. Backend for login page
 
-// type RegisterResponseBody =
-// | {
-//   errors: {
-//     message:string:
-//   }[];
-// }
-// | { user: {id:number}};
+export type LoginResponseBody =
+  | {
+      errors: {
+        message: string;
+      }[];
+    }
+  | { user: { id: number; username: string } };
 
-export default async function handler(req, res) {
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse<LoginResponseBody>,
+) {
   // method must be post
   if (req.method === 'POST') {
     if (
@@ -53,8 +62,22 @@ export default async function handler(req, res) {
     const userId = userWithPasswordHash.id;
     const username = userWithPasswordHash.username;
 
-    res.status(200).json({ user: { id: userId, username: username } });
+    const token = crypto.randomBytes(80).toString('base64');
+
+    const session = await createSession(token, userId);
+
+    const serializedCookie = await createSerializedRegisterSessionTokenCookie(
+      session.token,
+    );
+
+    // tell the browser to create the cookie
+
+    res
+      .status(200)
+      .setHeader('set-Cookie', serializedCookie)
+      .json({ user: { id: userId, username: username } });
   } else {
     res.status(405).json({ errors: [{ message: 'method not allowed' }] });
+    return;
   }
 }
