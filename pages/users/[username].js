@@ -1,7 +1,7 @@
 import { GetServerSidePropsContext } from 'next';
 import Head from 'next/head';
 import Link from 'next/link';
-import { getUserByUsername } from '../../../util/database';
+import { getUserByUsername } from '../../util/database';
 
 export default function UserDashboard(props) {
   if (!props.user) {
@@ -54,12 +54,11 @@ export default function UserDashboard(props) {
 }
 
 export async function getServerSideProps(context) {
-  const userIdFromUrl = context.query.username;
-
-  if (!userIdFromUrl || Array.isArray(userIdFromUrl)) {
+  const usernameFromUrl = context.query.username;
+  if (!usernameFromUrl || Array.isArray(usernameFromUrl)) {
     return { props: {} };
   }
-  const user = await getUserByUsername(userIdFromUrl);
+  const user = await getUserByUsername(usernameFromUrl);
 
   if (!user) {
     context.res.statusCode = 404;

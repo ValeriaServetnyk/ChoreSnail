@@ -43,12 +43,12 @@ export default function Login() {
       // redirect to user profile
 
       // by username
-      //   await router.push(`/users/${loginResponseBody.user.username}`);
-      // }
-
-      // by id
-      await router.push(`/users/${loginResponseBody.user.id}`);
+      await router.push(`/users/${loginResponseBody.user.username}`);
     }
+
+    // by id
+    //   await router.push(`/users/${loginResponseBody.user.id}`);
+    // }
   }
   return (
     <div>

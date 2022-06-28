@@ -35,7 +35,9 @@ export default async function handler(req, res) {
     // create new user
     const newUser = await createUser(req.body.username, passwordHash);
 
-    res.status(200).json({ user: { id: newUser.id } });
+    res
+      .status(200)
+      .json({ user: { id: newUser.id, username: newUser.username } });
   } else {
     res.status(405).json({ errors: [{ message: 'method not allowed' }] });
   }

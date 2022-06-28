@@ -30,8 +30,21 @@ export default function Signup() {
       return;
     }
 
-    // redirect user to dashboard after successful registration
-    await router.push('/dashboard');
+    const returnTo = router.query.returnTo;
+
+    if (
+      returnTo &&
+      !Array.isArray(returnTo) &&
+      // validate returnTo parameter against valid path
+      /^\/[a-zA-Z0-9-?=/]*$/.test(returnTo)
+    ) {
+      await router.push(returnTo);
+    } else {
+      // redirect to user profile
+
+      // by username
+      await router.push(`/users/${registerResponseBody.user.username}`);
+    }
   }
   return (
     <div>

@@ -51,8 +51,9 @@ export default async function handler(req, res) {
     }
 
     const userId = userWithPasswordHash.id;
+    const username = userWithPasswordHash.username;
 
-    res.status(200).json({ user: { id: userId } });
+    res.status(200).json({ user: { id: userId, username: username } });
   } else {
     res.status(405).json({ errors: [{ message: 'method not allowed' }] });
   }
