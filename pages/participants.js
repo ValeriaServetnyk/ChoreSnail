@@ -1,11 +1,11 @@
 import Head from 'next/head';
 import Link from 'next/link';
 import { Fragment, useEffect, useState } from 'react';
-import { getUserByValidSessionToken } from '../util/database';
+import { getProjectByValidSessionToken } from '../util/database';
 
 // frontend for API participants
 
-export default function AddParticipants() {
+export default function AddParticipants(props) {
   const [participantsList, setParticipantsList] = useState([]);
 
   // set the list to inactive and once the button edit clicked turn the id of the line into active
@@ -43,6 +43,7 @@ export default function AddParticipants() {
       body: JSON.stringify({
         participantName: newName,
         participantEmail: newEmail,
+        projectId: props.project.projectId,
       }),
     });
 
@@ -72,19 +73,16 @@ export default function AddParticipants() {
   }
 
   async function updateParticipantHandler(id) {
-    const response = await fetch(
-      `http://localhost:3000/api/participants/${id}`,
-      {
-        method: 'PUT  ',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          participantName: editName,
-          participantEmail: editEmail,
-        }),
+    const response = await fetch(`api/participants/${id}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
       },
-    );
+      body: JSON.stringify({
+        participantName: editName,
+        participantEmail: editEmail,
+      }),
+    });
 
     const updatedParticipant = await response.json();
     const newState = participantsList.map((participant) => {
@@ -225,27 +223,18 @@ export default function AddParticipants() {
 }
 
 export async function getServerSideProps(context) {
-  const user = await getUserByValidSessionToken(
+  const project = await getProjectByValidSessionToken(
     context.req.cookies.sessionToken,
   );
-
-  if (user) {
+  console.log('project', project);
+  if (!project) {
     return {
       props: {},
     };
   }
   return {
-    redirect: {
-      destination: `/login?returnTo=/participants`,
-      permanent: false,
+    props: {
+      project: project,
     },
   };
 }
-// export async function getServerSideProps() {
-//   const chores = await getParticipants();
-//   return {
-//   props: {
-//   participants: participants,
-//   },
-//   };
-//   }

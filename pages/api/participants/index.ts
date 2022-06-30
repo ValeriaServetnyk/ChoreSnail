@@ -25,9 +25,12 @@ export default async function handler(
     const newParticipant = await insertParticipant(
       req.body.participantName,
       req.body.participantEmail,
+      req.body.projectId,
     );
+
     return res.status(200).json(newParticipant);
   }
+
   // return this if we use any method that is not allowed
   res.status(405).end();
 }

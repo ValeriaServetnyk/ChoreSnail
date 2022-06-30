@@ -93,7 +93,7 @@ export default function Login(props: Props) {
           ))}
 
         <button>
-          <Link href="/index">
+          <Link href="/">
             <a>Back</a>
           </Link>
         </button>

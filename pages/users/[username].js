@@ -1,7 +1,7 @@
 // import { GetServerSidePropsContext } from 'next';
 import Head from 'next/head';
 import Link from 'next/link';
-import { getUserByUsername } from '../../util/database';
+import { getUserByValidSessionToken } from '../../util/database';
 
 export default function UserDashboard(props) {
   if (!props.user) {
@@ -19,14 +19,14 @@ export default function UserDashboard(props) {
           <Link href="/login">
             <a>Login</a>
           </Link>
-          <Link href="/login">
+          <Link href="/signup">
             <a>SignIn</a>
           </Link>
         </main>
       </>
     );
   }
-
+  console.log('my user', props.user.id);
   return (
     <div>
       <Head>
@@ -45,6 +45,7 @@ export default function UserDashboard(props) {
         <Link href="/projects">
           <a>Create new project</a>
         </Link>
+        <br />
         <Link href="/login">
           <a>Go back to login</a>
         </Link>
@@ -53,21 +54,55 @@ export default function UserDashboard(props) {
   );
 }
 
+// export async function getServerSideProps(context) {
+//   const usernameFromUrl = context.query.username;
+
+//   if (!usernameFromUrl || Array.isArray(usernameFromUrl)) {
+//     return { props: {} };
+//   }
+//   const user = await getUserByUsername(usernameFromUrl);
+
+//   if (!user) {
+//     context.res.statusCode = 404;
+//     return { props: {} };
+//   }
+
+//   const privateUser = await getUserByValidSessionToken(
+//     context.req.cookies.sessionToken,
+//   );
+
+//   if (privateUser === user) {
+//     return {
+//       props: {
+//         user: privateUser,
+//       },
+//     };
+//   }
+
+//   return {
+//     redirect: {
+//       destination: `/login?returnTo=/users/private-profile`,
+//       permanent: false,
+//     },
+//   };
+// }
+
 export async function getServerSideProps(context) {
-  const usernameFromUrl = context.query.username;
-  if (!usernameFromUrl || Array.isArray(usernameFromUrl)) {
-    return { props: {} };
-  }
-  const user = await getUserByUsername(usernameFromUrl);
+  const user = await getUserByValidSessionToken(
+    context.req.cookies.sessionToken,
+  );
 
-  if (!user) {
-    context.res.statusCode = 404;
-    return { props: {} };
+  if (user) {
+    return {
+      props: {
+        user: user,
+      },
+    };
   }
-
   return {
-    props: {
-      user: user,
+    redirect: {
+      destination: `/login?returnTo=/users/private-profile`,
+      permanent: false,
     },
   };
 }

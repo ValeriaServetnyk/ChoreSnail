@@ -48,9 +48,9 @@ export default function Signup(props: Props) {
       // redirect to user profile
 
       // by username
-      // await router.push(`/users/${loginResponseBody.user.username}`);
+      await router.push(`/users/${registerResponseBody.user.username}`);
       await props.refreshUserProfile();
-      await router.push(`/`);
+      // await router.push(`/`);
     }
   }
   return (

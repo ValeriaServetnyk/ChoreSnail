@@ -25,14 +25,14 @@ SELECT * from chores`;
 // return all from table project participant
 export async function getParticipants() {
   const participants = await sql`
-SELECT * from projectparticipant`;
+SELECT * from project_participants`;
   return participants.map((participant) => camelcaseKeys(participant));
 }
 
 // to return participant by id
 export async function getParticipantById(id) {
   const [participant] = await sql`
-SELECT * from projectparticipant
+SELECT * from project_participants
 WHERE id = ${id}`;
   return camelcaseKeys(participant);
 }
@@ -40,18 +40,22 @@ WHERE id = ${id}`;
 // to delete participant by id
 export async function deleteParticipantById(id) {
   const [participant] = await sql`
-DELETE FROM projectparticipant
+DELETE FROM project_participants
 WHERE id=${id}
 RETURNING *`;
   return camelcaseKeys(participant);
 }
 
 // to insert participant
-export async function insertParticipant(participantName, participantEmail) {
+export async function insertParticipant(
+  participantName,
+  participantEmail,
+  projectId,
+) {
   const [participant] = await sql`
-INSERT INTO projectparticipant
-(participant_name, participant_email)
-VALUES (${participantName}, ${participantEmail})
+INSERT INTO project_participants
+(participant_name, participant_email, project_id)
+VALUES (${participantName}, ${participantEmail}, ${projectId})
  RETURNING *`;
   return camelcaseKeys(participant);
 }
@@ -63,7 +67,7 @@ export async function updateParticipantById(
   participantEmail,
 ) {
   const [participant] = await sql`
-UPDATE projectparticipant
+UPDATE project_participants
 SET
 participant_name= ${participantName},
 participant_email=${participantEmail}
@@ -95,11 +99,11 @@ RETURNING *`;
   return camelcaseKeys(project);
 }
 
-export async function insertProject(projectName) {
+export async function insertProject(projectName, creatorId) {
   const [project] = await sql`
 INSERT INTO projects
-(project_name)
-VALUES (${projectName})
+(project_name, creator_id)
+VALUES (${projectName}, ${creatorId} )
  RETURNING *`;
   return camelcaseKeys(project);
 }
@@ -207,4 +211,22 @@ export async function getUserByValidSessionToken(token) {
   `;
   await deleteExpiredSessions();
   return user && camelcaseKeys(user);
+}
+
+export async function getProjectByValidSessionToken(token) {
+  if (!token) return undefined;
+  const [project] = await sql`
+  SELECT
+   projects.id as project_id
+FROM
+  projects,
+  users,
+  sessions
+WHERE
+ projects.creator_id = users.id
+AND
+ sessions.user_id = users.id
+AND
+ sessions.token = ${token}`;
+  return project && camelcaseKeys(project);
 }

@@ -20,7 +20,10 @@ export default async function handler(
     if (!req.body.projectName) {
       return res.status(400).json({ error: 'to add a project insert name' });
     }
-    const newProject = await insertProject(req.body.projectName);
+    const newProject = await insertProject(
+      req.body.projectName,
+      req.body.creatorId,
+    );
     return res.status(200).json(newProject);
   }
   // return this if we use any method that is not allowed

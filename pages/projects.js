@@ -5,17 +5,17 @@ import { getUserByValidSessionToken } from '../util/database';
 
 // frontend for API participants
 
-export default function AddProject() {
+export default function AddProject(props) {
   const [projectsList, setProjectsList] = useState([]);
 
   // set the list to inactive and once the button edit clicked turn the id of the line into active
   const [activeId, setActiveId] = useState(undefined);
 
-  // user input, add participant
+  // user input, add project name
 
   const [newProjectName, setNewProjectName] = useState('');
 
-  // user input, edit participant
+  // user input, edit project name
 
   const [editProjectName, setEditProjectName] = useState('');
 
@@ -30,7 +30,9 @@ export default function AddProject() {
     });
   }, []);
 
-  // add participants to the api on button click
+  // add project to the api on button click
+
+  // console.log('new check', props.user);
 
   async function createProjectsHandler() {
     const response = await fetch('http://localhost:3000/api/projects', {
@@ -40,6 +42,7 @@ export default function AddProject() {
       },
       body: JSON.stringify({
         projectName: newProjectName,
+        creatorId: props.user.id,
       }),
     });
 
@@ -71,7 +74,7 @@ export default function AddProject() {
     const response = await fetch(
       `http://localhost:3000/api/projects/${projectId}`,
       {
-        method: 'PUT  ',
+        method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
         },
@@ -204,24 +207,15 @@ export async function getServerSideProps(context) {
   const user = await getUserByValidSessionToken(
     context.req.cookies.sessionToken,
   );
-
-  if (user) {
+  // console.log('other user', user);
+  if (!user) {
     return {
       props: {},
     };
   }
   return {
-    redirect: {
-      destination: `/login?returnTo=/projects`,
-      permanent: false,
+    props: {
+      user: user || null,
     },
   };
 }
-// export async function getServerSideProps() {
-//   const chores = await getParticipants();
-//   return {
-//   props: {
-//   participants: participants,
-//   },
-//   };
-//   }

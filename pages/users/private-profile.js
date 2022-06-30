@@ -42,7 +42,7 @@ export default function UserDashboard(props) {
         <div>username: {props.user.username}</div>
         <h1>My past projects</h1>
         <h1>My added chores</h1>
-        <Link href="/">
+        <Link href="/projects">
           <a>Create new project</a>
         </Link>
         <Link href="/login">

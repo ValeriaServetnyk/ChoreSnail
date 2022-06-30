@@ -1,6 +1,7 @@
 import Head from 'next/head';
+import Image from 'next/image';
 import Link from 'next/link';
-import { getChores, getUserByValidSessionToken } from '../util/database';
+import { getChores } from '../util/database';
 
 export default function Chores(props) {
   return (
@@ -17,9 +18,15 @@ export default function Chores(props) {
           {props.chores.map((chore) => {
             return (
               <div key={`chore-${chore.id}`}>
-                <div>Name: {chore.name}</div>
+                <div>{chore.name}</div>
                 <div>Weight:{chore.weight}</div>
-                <div>Created by:{chore.creator_id}</div>
+                <Image
+                  src={`/${chore.iconName}.png`}
+                  width="100"
+                  height="100"
+                  alt="chore icons"
+                />
+                {/* <div>Created by:{chore.creator_id}</div> */}
               </div>
             );
           })}
@@ -37,23 +44,12 @@ export default function Chores(props) {
   );
 }
 
-export async function getServerSideProps(context) {
+export async function getServerSideProps() {
   const chores = await getChores();
-  const user = await getUserByValidSessionToken(
-    context.req.cookies.sessionToken,
-  );
 
-  if (user) {
-    return {
-      props: {
-        chores: chores,
-      },
-    };
-  }
   return {
-    redirect: {
-      destination: `/login?returnTo=/chores`,
-      permanent: false,
+    props: {
+      chores: chores,
     },
   };
 }

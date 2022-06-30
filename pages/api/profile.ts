@@ -5,7 +5,6 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse,
 ) {
-  // method must be post
   if (req.method === 'GET') {
     const token = req.cookies.sessionToken;
 
@@ -13,6 +12,7 @@ export default async function handler(
       res
         .status(400)
         .json({ errors: [{ message: 'No session token passed' }] });
+      return;
     }
 
     const user = await getUserByValidSessionToken(token);
@@ -21,6 +21,7 @@ export default async function handler(
       res
         .status(400)
         .json({ errors: [{ message: 'Session token not valid' }] });
+      return;
     }
 
     res.status(200).json({ user: user });
