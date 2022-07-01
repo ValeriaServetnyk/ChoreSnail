@@ -30,6 +30,7 @@ function MyApp({ Component, pageProps }) {
         <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
         <link rel="apple-touch-icon" href="/icon-apple-touch.png" />
         <link rel="manifest" href="/manifest.json" />
+        <meta name="viewport" content="initial-scale=1, width=device-width" />
       </Head>
       <Global
         styles={css`
