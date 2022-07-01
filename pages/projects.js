@@ -192,6 +192,8 @@ export default function AddProject(props) {
             );
           })}
         <div>
+          <div>Project start date:</div>
+          <div>Project end date:</div>
           <button>
             <Link href="/participants">
               <a>Continue</a>

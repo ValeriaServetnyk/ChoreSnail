@@ -2,6 +2,7 @@ import Head from 'next/head';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
+import { Button, Form } from 'react-bootstrap';
 
 type Props = {
   refreshUserProfile: () => Promise<void>;
@@ -68,30 +69,44 @@ export default function Login(props: Props) {
 
       <main>
         <h1>Login to create projects</h1>
-        <label>
-          Username:{' '}
-          <input
-            value={username}
-            onChange={(event) => {
-              setUsername(event.currentTarget.value);
-            }}
-          />
-        </label>
-        <label>
-          Password:{' '}
-          <input
-            value={password}
-            onChange={(event) => {
-              setPassword(event.currentTarget.value);
-            }}
-          />
-        </label>
-        <button onClick={() => loginHandler()}>Login</button>
-        {errors.length &&
-          errors.map((error) => (
-            <span key={`error-${error.message}`}>{error.message}</span>
-          ))}
+        <Form>
+          <Form.Group className="mb-3" controlId="formBasicEmail">
+            <Form.Label>
+              <label>
+                Username:{' '}
+                <Form.Control type="username" placeholder="Enter your name" />
+                <input
+                  value={username}
+                  onChange={(event) => {
+                    setUsername(event.currentTarget.value);
+                  }}
+                />
+              </label>
+            </Form.Label>
+          </Form.Group>
 
+          <Form.Group className="mb-3" controlId="formBasicPassword">
+            <Form.Label>
+              <label>
+                Password:{' '}
+                <Form.Control type="password" placeholder="Password" />
+                <input
+                  value={password}
+                  onChange={(event) => {
+                    setPassword(event.currentTarget.value);
+                  }}
+                />
+              </label>
+            </Form.Label>
+          </Form.Group>
+          <Button variant="primary" type="submit">
+            <button onClick={() => loginHandler()}>Login</button>
+          </Button>
+          {errors.length &&
+            errors.map((error) => (
+              <span key={`error-${error.message}`}>{error.message}</span>
+            ))}
+        </Form>
         <button>
           <Link href="/">
             <a>Back</a>

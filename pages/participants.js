@@ -116,17 +116,26 @@ export default function AddParticipants(props) {
           </Link>
         </div>
         <label>
-          Participant name:{' '}
+          Participant name:
           <input
             value={newName}
+            placeholer="participant name"
             onChange={(event) => setNewName(event.currentTarget.value)}
           />
         </label>
         <label>
-          Participant email:{' '}
+          Participant email:
           <input
             value={newEmail}
+            placeholer="participant email"
             onChange={(event) => setNewEmail(event.currentTarget.value)}
+            onKeyDown={(event) => {
+              if (event.key === 'Enter') {
+                createParticipantHandler([newName, newEmail]).catch(() => {
+                  console.log('participant not added');
+                });
+              }
+            }}
           />
         </label>
         <button
@@ -147,14 +156,14 @@ export default function AddParticipants(props) {
             return participant.id === activeId ? (
               <Fragment key={participant.id}>
                 <label>
-                  Participant name:{' '}
+                  Participant name:
                   <input
                     value={editName}
                     onChange={(event) => setEditName(event.currentTarget.value)}
                   />
                 </label>
                 <label>
-                  Participant email:{' '}
+                  Participant email:
                   <input
                     value={editEmail}
                     onChange={(event) =>
