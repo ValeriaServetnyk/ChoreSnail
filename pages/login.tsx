@@ -1,14 +1,20 @@
 import { css } from '@emotion/react';
-import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
-import Container from '@mui/material/Container';
-import Grid from '@mui/material/Grid';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
-import TextField from '@mui/material/TextField';
+import {
+  Box,
+  Button,
+  Container,
+  Grid,
+  TextField,
+  Typography,
+} from '@mui/material';
 import Head from 'next/head';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
+
+const pageLayout = css`
+  min-height: 80vh;
+`;
 
 const buttonStyles = css`
   background-color: rgba(156, 85, 20, 1);
@@ -24,6 +30,8 @@ const titleStyles = css`
   font-size: 30px;
   font-weight: medium;
   margin-top: 40px;
+  font-family: Nunito;
+  margin-bottom: 40px;
 `;
 
 const messageStyles = css`
@@ -38,8 +46,6 @@ const errorMessageStyles = css`
 type Props = {
   refreshUserProfile: () => Promise<void>;
 };
-
-const theme = createTheme();
 
 export default function Login(props: Props) {
   const [username, setUsername] = useState('');
@@ -99,21 +105,21 @@ export default function Login(props: Props) {
         />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-
-      <main>
-        <ThemeProvider theme={theme}>
-          <Container component="main" maxWidth="xs">
-            <Box
-              sx={{
-                marginTop: 8,
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-              }}
-            >
-              <h1 css={titleStyles}>Login to access your profile</h1>
-
-              <label>
+      <Container component="main" maxWidth="xs">
+        <main css={pageLayout}>
+          <Box
+            sx={{
+              marginTop: 8,
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+            }}
+          >
+            <Typography component="h1" variant="h5" css={titleStyles}>
+              Login to access your profile
+            </Typography>
+            <Grid container spacing={2}>
+              <Grid item xs={12}>
                 <TextField
                   margin="normal"
                   required
@@ -132,8 +138,8 @@ export default function Login(props: Props) {
                     setUsername(event.currentTarget.value);
                   }}
                 /> */}
-              </label>
-              <label>
+              </Grid>
+              <Grid item xs={12}>
                 <TextField
                   margin="normal"
                   required
@@ -153,38 +159,38 @@ export default function Login(props: Props) {
                     setPassword(event.currentTarget.value);
                   }}
                 /> */}
-              </label>
+              </Grid>
               <div css={errorMessageStyles}>
                 {errors.map((error) => (
                   <span key={`error-${error.message}`}>{error.message}</span>
                 ))}
               </div>
-              <Button
-                css={buttonStyles}
-                type="submit"
-                fullWidth
-                variant="contained"
-                sx={{ mt: 3, mb: 2 }}
-                onClick={() => loginHandler()}
-              >
-                Login
-              </Button>
+            </Grid>
+            <Button
+              css={buttonStyles}
+              type="submit"
+              fullWidth
+              variant="contained"
+              sx={{ mt: 3, mb: 2 }}
+              onClick={() => loginHandler()}
+            >
+              Login
+            </Button>
 
-              {/* <button onClick={() => loginHandler()}>Login</button> */}
-              {/* {errors.length &&
+            {/* <button onClick={() => loginHandler()}>Login</button> */}
+            {/* {errors.length &&
                 errors.map((error) => (
                   <span key={`error-${error.message}`}>{error.message}</span>
                 ))} */}
 
-              <Grid item>
-                <Link href="signup" css={messageStyles}>
-                  Don't have an account? Sign Up
-                </Link>
-              </Grid>
-            </Box>
-          </Container>
-        </ThemeProvider>
-      </main>
+            <Grid item>
+              <Link href="signup" css={messageStyles}>
+                Don't have an account? Sign Up
+              </Link>
+            </Grid>
+          </Box>
+        </main>
+      </Container>
     </div>
   );
 }

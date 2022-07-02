@@ -22,7 +22,7 @@ const buttonStyles = css`
 
 const titleStyles = css`
   color: rgba(156, 85, 20, 1);
-  font-size: 50px;
+  font-size: 40px;
   font-weight: medium;
   margin-top: 80px;
   margin-bottom: 0px;
@@ -69,12 +69,8 @@ const heroContainerStyles = css`
   padding: 0px;
 `;
 
-const blobStyles = css`
-  margin: -20px 0px 0px -50px;
-`;
-
 const pageLayout = css`
-  min-height: 100vh;
+  min-height: 80vh;
 `;
 
 export default function Home(props) {
