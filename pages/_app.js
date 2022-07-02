@@ -42,6 +42,7 @@ function MyApp({ Component, pageProps }) {
             font-family: Nunito, Indie Flower, -apple-system, BlinkMacSystemFont,
               Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans,
               Helvetica Neue, sans-serif;
+            /* min-height: 100vh; */
           }
 
           a {

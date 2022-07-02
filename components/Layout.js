@@ -1,3 +1,4 @@
+import Footer from './Footer';
 // import Image from 'next/image';
 // import Link from 'next/link';
 import Header from './Header';
@@ -7,7 +8,7 @@ export default function Layout(props) {
     <div>
       <Header user={props.user} refreshUserProfile={props.refreshUserProfile} />
       <div>{props.children}</div>
-      <footer>All rights reserved</footer>
+      <Footer />
     </div>
   );
 }

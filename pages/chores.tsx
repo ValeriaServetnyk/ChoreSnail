@@ -3,7 +3,19 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { getChores } from '../util/database';
 
-export default function Chores(props) {
+type Props = {
+  chores: Chore[];
+};
+
+type Chore = {
+  id: number;
+  name: string;
+  weight: number;
+  creatorId: number;
+  iconName: string;
+};
+
+export default function Chores(props: Props) {
   return (
     <div>
       <Head>
