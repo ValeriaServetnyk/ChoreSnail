@@ -48,6 +48,19 @@ const loginContainer = css`
   gap: 10px;
 `;
 
+const emptyButtonStyles = css`
+  border-color: rgba(156, 85, 20, 1);
+
+  font-size: 10px;
+
+  color: rgba(156, 85, 20, 1);
+
+  &:hover {
+    background-color: rgba(156, 85, 20, 0.3);
+    border-color: rgba(156, 85, 20, 1);
+  }
+`;
+
 export default function Header(props) {
   return (
     <Container>
@@ -76,7 +89,7 @@ export default function Header(props) {
           <div>
             {props.user ? (
               // using a instead of Link since we want to force a full refresh
-              <Button css={buttonStyles}>
+              <Button css={emptyButtonStyles} variant="outlined">
                 <a href="/logout">Logout</a>
               </Button>
             ) : (

@@ -107,14 +107,6 @@ export default function AddParticipants(props) {
       </Head>
       <main>
         <h1>Pick project participants</h1>
-        <div>
-          <Link href="/">
-            <a>Back</a>
-          </Link>
-          <Link href="/">
-            <a>Continue</a>
-          </Link>
-        </div>
         <label>
           Participant name:{' '}
           <input
@@ -226,7 +218,7 @@ export async function getServerSideProps(context) {
   const project = await getProjectByValidSessionToken(
     context.req.cookies.sessionToken,
   );
-  console.log('project', project);
+  // console.log('project', project);
   if (!project) {
     return {
       props: {},

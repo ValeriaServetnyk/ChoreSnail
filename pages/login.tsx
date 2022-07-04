@@ -11,6 +11,7 @@ import Head from 'next/head';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
+import { LoginResponseBody } from './api/login';
 
 const pageLayout = css`
   min-height: 80vh;
@@ -65,8 +66,8 @@ export default function Login(props: Props) {
         password: password,
       }),
     });
-    const loginResponseBody = await loginResponse.json();
-    console.log(loginResponseBody);
+    const loginResponseBody: LoginResponseBody = await loginResponse.json();
+    // console.log(loginResponseBody);
 
     // if there is an error
     if ('errors' in loginResponseBody) {
@@ -88,7 +89,8 @@ export default function Login(props: Props) {
       // redirect to user profile
       // by username
       await props.refreshUserProfile();
-      await router.push(`/users/${loginResponseBody.user.username}`);
+      await router.push(`/users/private-profile`);
+      // await router.push(`/users/${loginResponseBody.user.username}`);
     }
 
     // by id

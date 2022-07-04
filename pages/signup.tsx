@@ -11,6 +11,7 @@ import Head from 'next/head';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
+import { RegisterResponseBody } from './api/register';
 
 const messageStyles = css`
   font-family: Nunito;
@@ -85,8 +86,9 @@ export default function Signup(props: Props) {
         password: password,
       }),
     });
-    const registerResponseBody = await registerResponse.json();
-    console.log(registerResponseBody);
+    const registerResponseBody: RegisterResponseBody =
+      await registerResponse.json();
+    // console.log(registerResponseBody);
 
     // if there is an error
     if ('errors' in registerResponseBody) {
@@ -107,10 +109,10 @@ export default function Signup(props: Props) {
     } else {
       // redirect to user profile
 
-      // by username
-      await router.push(`/users/${registerResponseBody.user.username}`);
       await props.refreshUserProfile();
-      // await router.push(`/`);
+      // by username
+      await router.push(`/users/private-profile`);
+      // await router.push(`/users/${registerResponseBody.user.username}`);
     }
   }
   return (
@@ -123,16 +125,16 @@ export default function Signup(props: Props) {
         />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <Container component="main" maxWidth="xs">
-        <Box
-          sx={{
-            marginTop: 8,
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-          }}
-        >
-          <main css={pageLayout}>
+      <main css={pageLayout}>
+        <Container component="main" maxWidth="xs">
+          <Box
+            sx={{
+              marginTop: 8,
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+            }}
+          >
             <Typography component="h1" variant="h5" css={titleStyles}>
               Please create your account
             </Typography>
@@ -197,9 +199,9 @@ export default function Signup(props: Props) {
                 </Link>
               </Grid>
             </Grid>
-          </main>
-        </Box>
-      </Container>
+          </Box>
+        </Container>
+      </main>
     </div>
   );
 }

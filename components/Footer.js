@@ -6,6 +6,7 @@ import Typography from '@mui/material/Typography';
 const footerStyles = css`
   display: flex;
   justify-content: center;
+  padding: 10px;
 `;
 export default function StickyFooter() {
   return (
