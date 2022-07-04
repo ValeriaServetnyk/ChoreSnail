@@ -1,5 +1,4 @@
 import Head from 'next/head';
-import Link from 'next/link';
 import { Fragment, useEffect, useState } from 'react';
 import { getProjectByValidSessionToken } from '../util/database';
 
@@ -106,6 +105,7 @@ export default function AddParticipants(props) {
         />
       </Head>
       <main>
+        <h1>Project Name: {props.project.name}</h1>
         <h1>Pick project participants</h1>
         <label>
           Participant name:{' '}

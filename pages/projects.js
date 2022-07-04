@@ -11,6 +11,7 @@ import {
 } from '@mui/material';
 import Head from 'next/head';
 import Link from 'next/link';
+// import { useRouter } from 'next/router';
 import { Fragment, useEffect, useState } from 'react';
 import { getUserByValidSessionToken } from '../util/database';
 
@@ -75,6 +76,11 @@ const deleteButton = css`
     background-color: rgba(156, 85, 20, 0.3);
   }
 `;
+
+const errorMessageStyles = css`
+  font-family: Nunito;
+  color: rgba(226, 41, 41, 0.5);
+`;
 // frontend for API participants
 
 export default function AddProject(props) {
@@ -91,7 +97,7 @@ export default function AddProject(props) {
 
   const [editProjectName, setEditProjectName] = useState('');
 
-  // const [errors, setErrors] = useState([]);
+  const [errors, setErrors] = useState([]);
 
   // const router = useRouter();
 
@@ -123,14 +129,14 @@ export default function AddProject(props) {
 
     const createdProject = await response.json();
 
-    // if ('errors' in response) {
-    //   setErrors(response.errors);
-    //   return;
-    // }
+    if ('errors' in response) {
+      setErrors(response.errors);
+      return;
+    }
     const newState = [...projectsList, createdProject];
     setProjectsList(newState);
     setNewProjectName('');
-    // await router.push(`/users/participants`);
+    // await router.push(`/participants`);
   }
 
   async function deleteProjectHandler(projectId) {
@@ -223,6 +229,11 @@ export default function AddProject(props) {
                 >
                   Start a project
                 </Button>
+                <div css={errorMessageStyles}>
+                  {errors.map((error) => (
+                    <span key={`error-${error.message}`}>{error.message}</span>
+                  ))}
+                </div>
               </CardActions>
               {projectsList.map((project) => {
                 // do if is active

@@ -7,10 +7,12 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
+import { GetServerSidePropsContext } from 'next';
 import Head from 'next/head';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
+import { getUserByValidSessionToken } from '../util/database';
 import { RegisterResponseBody } from './api/register';
 
 const messageStyles = css`
@@ -204,4 +206,22 @@ export default function Signup(props: Props) {
       </main>
     </div>
   );
+}
+
+export async function getServerSideProps(context: GetServerSidePropsContext) {
+  const user = await getUserByValidSessionToken(
+    context.req.cookies.sessionToken,
+  );
+
+  if (user) {
+    return {
+      redirect: {
+        destination: `/users/private-profile`,
+        permanent: false,
+      },
+    };
+  }
+  return {
+    props: {},
+  };
 }
