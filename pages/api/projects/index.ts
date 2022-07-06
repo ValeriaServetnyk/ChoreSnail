@@ -3,6 +3,14 @@ import { getProjects, insertProject } from '../../../util/database';
 
 // connecting to API methods GET and POST
 
+export type RegisterResponseBody =
+  | {
+      errors: {
+        message: string;
+      }[];
+    }
+  | { user: { id: number } };
+
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse,
@@ -18,7 +26,9 @@ export default async function handler(
   // if method POST
   if (req.method === 'POST') {
     if (!req.body.projectName) {
-      return res.status(400).json({ error: 'to add a project insert name' });
+      return res
+        .status(400)
+        .json({ errors: [{ message: 'to add a project insert name' }] });
     }
     const newProject = await insertProject(
       req.body.projectName,

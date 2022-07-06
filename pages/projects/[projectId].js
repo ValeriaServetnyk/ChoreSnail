@@ -1,10 +1,13 @@
 import Head from 'next/head';
 import { Fragment, useEffect, useState } from 'react';
-import { getProjectByValidSessionToken } from '../util/database';
+import {
+  getParticipantsByProjectId,
+  getProjectById,
+  getUserByValidSessionToken,
+  isCreator,
+} from '../../util/database';
 
-// frontend for API participants
-
-export default function AddParticipants(props) {
+export default function Project(props) {
   const [participantsList, setParticipantsList] = useState([]);
 
   // set the list to inactive and once the button edit clicked turn the id of the line into active
@@ -21,15 +24,11 @@ export default function AddParticipants(props) {
   const [editEmail, setEditEmail] = useState('');
 
   useEffect(() => {
-    async function getParticipants() {
-      const response = await fetch('http://localhost:3000/api/participants');
-      const participants = await response.json();
-      setParticipantsList(participants);
-    }
-    getParticipants().catch(() => {
-      console.log('request failed');
-    });
-  }, []);
+    setParticipantsList(props.participants);
+  }, [props.participants]);
+  // console.log('participantsList', participantsList);
+
+  console.log('participantsList', participantsList);
 
   // add participants to the api on button click
 
@@ -42,7 +41,7 @@ export default function AddParticipants(props) {
       body: JSON.stringify({
         participantName: newName,
         participantEmail: newEmail,
-        projectId: props.project.projectId,
+        projectId: props.project.id,
       }),
     });
 
@@ -72,16 +71,19 @@ export default function AddParticipants(props) {
   }
 
   async function updateParticipantHandler(id) {
-    const response = await fetch(`api/participants/${id}`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
+    const response = await fetch(
+      `http://localhost:3000/api/participants/${id}`,
+      {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          participantName: editName,
+          participantEmail: editEmail,
+        }),
       },
-      body: JSON.stringify({
-        participantName: editName,
-        participantEmail: editEmail,
-      }),
-    });
+    );
 
     const updatedParticipant = await response.json();
     const newState = participantsList.map((participant) => {
@@ -92,6 +94,17 @@ export default function AddParticipants(props) {
       }
     });
     setParticipantsList(newState);
+  }
+  // if there is an error in the props, return a h1 element with the error message
+  if (props.error) {
+    return <h1>{props.error}</h1>;
+  }
+  if (!props.project) {
+    return (
+      <div>
+        <h1>You have no projects</h1>
+      </div>
+    );
   }
 
   return (
@@ -105,8 +118,7 @@ export default function AddParticipants(props) {
         />
       </Head>
       <main>
-        <h1>Project Name: {props.project.name}</h1>
-        <h1>Pick project participants</h1>
+        <h1>Pick participants for {props.project.projectName}</h1>
         <label>
           Participant name:{' '}
           <input
@@ -215,18 +227,43 @@ export default function AddParticipants(props) {
 }
 
 export async function getServerSideProps(context) {
-  const project = await getProjectByValidSessionToken(
+  // Get the user id from token
+  const user = await getUserByValidSessionToken(
     context.req.cookies.sessionToken,
   );
-  // console.log('project', project);
-  if (!project) {
+  // console.log('other user', user);
+  if (!user) {
     return {
-      props: {},
+      redirect: {
+        destination: `/login?returnTo=/projects/${context.query.projectId}`,
+        permanent: false,
+      },
     };
   }
+
+  // create a function that takes project id and user id and checks if user is owner of the project
+
+  const isOwner = await isCreator(user.id, context.query.projectId);
+  // console.log('isOwner', isOwner);
+  if (!isOwner) {
+    // return error message in props
+    return {
+      props: {
+        error: 'You are not the owner of this project',
+      },
+    };
+  }
+
+  // if yes then show project and participants otherwise redirect to login page
+  const project = await getProjectById(context.query.projectId);
+  const participants = await getParticipantsByProjectId(
+    context.query.projectId,
+  );
+
   return {
     props: {
-      project: project,
+      project,
+      participants,
     },
   };
 }

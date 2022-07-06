@@ -22,19 +22,19 @@ SELECT * from chores`;
   return camelcaseKeys(chores);
 }
 
-// return all from table project participant
-export async function getParticipants() {
-  const participants = await sql`
-SELECT * from project_participants`;
-  return participants.map((participant) => camelcaseKeys(participant));
-}
-
 // to return participant by id
 export async function getParticipantById(id) {
   const [participant] = await sql`
 SELECT * from project_participants
 WHERE id = ${id}`;
   return camelcaseKeys(participant);
+}
+
+export async function getParticipantsByProjectId(projectId) {
+  const participants = await sql`
+SELECT * from project_participants
+WHERE project_id = ${projectId}`;
+  return participants.map((participant) => camelcaseKeys(participant));
 }
 
 // to delete participant by id
@@ -213,11 +213,12 @@ export async function getUserByValidSessionToken(token) {
   return user && camelcaseKeys(user);
 }
 
-export async function getProjectByValidSessionToken(token) {
+export async function getProjectsByValidSessionToken(token) {
   if (!token) return undefined;
-  const [project] = await sql`
+  const project = await sql`
   SELECT
-   projects.id as project_id
+   projects.id,
+   projects.project_name as project_name
 FROM
   projects,
   users,
@@ -228,5 +229,22 @@ AND
  sessions.user_id = users.id
 AND
  sessions.token = ${token}`;
+  return project && camelcaseKeys(project);
+}
+
+// Create a function that checks if user is creator of project
+export async function isCreator(userId, projectId) {
+  const [project] = await sql`
+  SELECT
+   projects.id as project_id
+FROM
+  projects,
+  users
+WHERE
+ projects.creator_id = users.id
+AND
+ users.id = ${userId}
+AND
+ projects.id = ${projectId}`;
   return project && camelcaseKeys(project);
 }

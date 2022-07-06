@@ -1,5 +1,8 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { getParticipants, insertParticipant } from '../../../util/database';
+import {
+  getParticipantsByProjectId,
+  insertParticipant,
+} from '../../../util/database';
 
 // connecting to API methods GET and POST
 
@@ -11,7 +14,7 @@ export default async function handler(
 
   if (req.method === 'GET') {
     // get participants from database
-    const participants = await getParticipants();
+    const participants = await getParticipantsByProjectId(req.query.projectId);
     res.status(200).json(participants);
   }
 

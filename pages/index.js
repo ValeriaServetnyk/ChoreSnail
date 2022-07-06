@@ -141,7 +141,7 @@ export default function Home(props) {
               </div>
               <div>
                 <Button css={buttonStyles} href="/signup">
-                  <a>Let`s get started!</a>
+                  Let`s get started!
                 </Button>
               </div>
             </div>

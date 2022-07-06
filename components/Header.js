@@ -89,8 +89,8 @@ export default function Header(props) {
           <div>
             {props.user ? (
               // using a instead of Link since we want to force a full refresh
-              <Button css={emptyButtonStyles} variant="outlined">
-                <a href="/logout">Logout</a>
+              <Button css={emptyButtonStyles} variant="outlined" href="/logout">
+                Logout
               </Button>
             ) : (
               <>
