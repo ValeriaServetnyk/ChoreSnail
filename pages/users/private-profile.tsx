@@ -248,6 +248,9 @@ export default function UserDashboard(props: Props) {
           <Button css={buttonStyles} onClick={handleClickOpen}>
             Create new project
           </Button>
+
+          {/* open dialog box to initiate a new project */}
+
           <Dialog open={open} onClose={handleClose}>
             <DialogTitle css={popupTitleStyles}>What is planned? </DialogTitle>
             <DialogContent>
@@ -291,13 +294,13 @@ export default function UserDashboard(props: Props) {
               </Button>
             </DialogActions>
           </Dialog>
+          {/* dialog box closed */}
 
           <h1>My past projects</h1>
 
           <Card sx={{ minWidth: 275 }} css={cardElements}>
             <CardContent>
               {projectsList.map((project) => {
-                console.log(project);
                 // do if is active
                 return project.id === activeId ? (
                   <Fragment key={project.id}>

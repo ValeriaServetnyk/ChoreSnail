@@ -16,6 +16,7 @@ const logoStyles = css`
   color: rgba(156, 85, 20, 1);
   font-size: 30px;
   font-weight: bold;
+  cursor: pointer;
 `;
 
 const logoContainer = css`
