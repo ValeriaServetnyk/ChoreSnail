@@ -64,7 +64,7 @@ const listButtonContainer = css`
 const heroContainerStyles = css`
   display: flex;
   flex-direction: row;
-  gap: 100px;
+  gap: 350px;
   margin: 0px;
   padding: 0px;
 `;
@@ -93,6 +93,7 @@ export default function Home(props) {
         <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
         <link rel="apple-touch-icon" href="/icon-apple-touch.png" />
         <link rel="manifest" href="/manifest.json" />
+        <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js" />
       </Head>
 
       <Container>
@@ -145,14 +146,23 @@ export default function Home(props) {
                 </Button>
               </div>
             </div>
-            <div>
+            {/* <div>
               <Image
                 src="/blob1.svg"
                 alt="random blob"
                 width="800"
                 height="500"
               />
-            </div>
+            </div> */}
+            <lottie-player
+              src="https://assets4.lottiefiles.com/packages/lf20_jwqugkrv.json"
+              background="transparent"
+              speed="1"
+              width="100px"
+              height="100px"
+              loop
+              autoplay
+            />
           </div>
         </main>
       </Container>

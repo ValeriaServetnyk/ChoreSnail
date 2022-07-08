@@ -233,14 +233,14 @@ export default function UserDashboard(props: Props) {
   }
 
   return (
-    <div css={pageLayout}>
+    <div>
       <Container>
         <Head>
           <title>{props.user.username}</title>
 
           <meta name="user dashboard" content="user`s past activity log" />
         </Head>
-        <main>
+        <main css={pageLayout}>
           <h1 css={titleStyles}>
             Welcome to your dashboard {props.user.username}
           </h1>
@@ -402,4 +402,83 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
       permanent: false,
     },
   };
+}
+
+{
+  /* <Card sx={{ minWidth: 275 }} css={cardElements}>
+            <CardContent>
+              {projectsList.map((project) => {
+                // do if is active
+                return project.id === activeId ? (
+                  <Fragment key={project.id}>
+                    <TextField
+                      fullWidth
+                      id="standard-basic"
+                      label="Edit project name"
+                      variant="standard"
+                      value={editProjectName}
+                      onChange={(event) =>
+                        setEditProjectName(event.currentTarget.value)
+                      }
+                    />
+
+                    <Button
+                      css={emptyButtonStyles}
+                      onClick={() => {
+                        setActiveId(undefined);
+                        updateProjectHandler(project.id).catch(() => {
+                          console.log('request failed');
+                        });
+                      }}
+                    >
+                      Save
+                    </Button>
+                    <Button
+                      css={deleteButton}
+                      onClick={() =>
+                        deleteProjectHandler(project.id).catch(() => {
+                          console.log('request failed');
+                        })
+                      }
+                    >
+                      {' '}
+                      x
+                    </Button>
+                  </Fragment>
+                ) : (
+                  // do if is inactive
+                  <Fragment key={project.id}>
+                    <TextField
+                      fullWidth
+                      id="filled-basic"
+                      label="Project saved"
+                      variant="filled"
+                      value={project.projectName}
+                      disabled
+                    />
+
+                    <Button
+                      css={emptyButtonStyles}
+                      onClick={() => {
+                        setActiveId(project.id);
+                        setEditProjectName(project.projectName);
+                      }}
+                    >
+                      Edit
+                    </Button>
+                    <Button
+                      css={deleteButton}
+                      onClick={() =>
+                        deleteProjectHandler(project.id).catch(() => {
+                          console.log('request failed');
+                        })
+                      }
+                    >
+                      x
+                    </Button>
+                  </Fragment>
+                );
+              })}
+            </CardContent>
+          </Card> */
 }

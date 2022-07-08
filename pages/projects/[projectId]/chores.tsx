@@ -12,6 +12,7 @@ import { GetServerSidePropsContext } from 'next';
 import Head from 'next/head';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useState } from 'react';
 import {
   getChores,
   getParticipantsByProjectId,
@@ -70,6 +71,8 @@ const titleStyles = css`
 
 export default function Chores(props: Props) {
   const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
+
+  const [projectChore, setProjectChore] = useState();
   return (
     <div>
       <Head>
@@ -117,6 +120,10 @@ export default function Chores(props: Props) {
                             {chore.name}
                           </Typography>
                           <Checkbox
+                            checked={projectChore}
+                            onChange={(event) => {
+                              setProjectChore(event.currentTarget.checked);
+                            }}
                             css={checkboxStyles}
                             {...label}
                             sx={{ '& .MuiSvgIcon-root': { fontSize: 28 } }}
