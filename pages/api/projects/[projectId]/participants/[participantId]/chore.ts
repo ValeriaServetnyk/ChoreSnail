@@ -1,8 +1,8 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import {
-  getParticipantsByProjectId,
-  insertParticipant,
-} from '../../../util/database';
+  getChoresByProjectIdAndParticipantId,
+  setAssignedParticipantId,
+} from '../../../../../../util/database';
 
 // connecting to API methods GET and POST
 
@@ -14,24 +14,26 @@ export default async function handler(
 
   if (req.method === 'GET') {
     // get participants from database
-    const participants = await getParticipantsByProjectId(req.query.projectId);
-    res.status(200).json(participants);
+    const participantsChores = await getChoresByProjectIdAndParticipantId(
+      req.query.projectId,
+    );
+    res.status(200).json(participantsChores);
   }
 
   // if method POST
   if (req.method === 'POST') {
-    if (!req.body.participantName || !req.body.participantEmail) {
+    if (!req.body.choreId) {
       return res
         .status(400)
-        .json({ error: 'to add a user insert name and email' });
+        .json({ error: 'add chores to your project' });
     }
-    const newParticipant = await insertParticipant(
-      req.body.participantName,
-      req.body.participantEmail,
+    const assignChores = await setAssignedParticipantId(
       req.body.projectId,
+      req.body.choreIds,
+      req.body.participantId,
     );
 
-    return res.status(200).json(newParticipant);
+    return res.status(200).json(assignChores);
   }
 
   // return this if we use any method that is not allowed

@@ -99,17 +99,20 @@ export default function Project(props) {
   // add participants to the api on button click
 
   async function createParticipantHandler() {
-    const response = await fetch('http://localhost:3000/api/participants', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
+    const response = await fetch(
+      `http://localhost:3000/api/projects/${props.project.id}/participants`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          participantName: newName,
+          participantEmail: newEmail,
+          projectId: props.project.id,
+        }),
       },
-      body: JSON.stringify({
-        participantName: newName,
-        participantEmail: newEmail,
-        projectId: props.project.id,
-      }),
-    });
+    );
 
     const createdParticipant = await response.json();
     const newState = [...participantsList, createdParticipant];
@@ -118,9 +121,9 @@ export default function Project(props) {
     setNewEmail('');
   }
 
-  async function deleteParticipantHandler(id) {
+  async function deleteParticipantHandler(id, projectId) {
     const response = await fetch(
-      `http://localhost:3000/api/participants/${id}`,
+      `http://localhost:3000/api/projects/${projectId}/participants/${id}`,
       {
         method: 'DELETE',
         // headers: {
@@ -136,9 +139,9 @@ export default function Project(props) {
     setParticipantsList(newState);
   }
 
-  async function updateParticipantHandler(id) {
+  async function updateParticipantHandler(id, projectId) {
     const response = await fetch(
-      `http://localhost:3000/api/participants/${id}`,
+      `http://localhost:3000/api/projects/${projectId}/participants/${id}`,
       {
         method: 'PUT',
         headers: {
@@ -263,7 +266,10 @@ export default function Project(props) {
                         css={emptyButtonStyles}
                         onClick={() => {
                           setActiveId(undefined);
-                          updateParticipantHandler(participant.id).catch(() => {
+                          updateParticipantHandler(
+                            participant.id,
+                            props.project.id,
+                          ).catch(() => {
                             console.log('request failed');
                           });
                         }}
@@ -273,7 +279,10 @@ export default function Project(props) {
                       <Button
                         css={deleteButton}
                         onClick={() =>
-                          deleteParticipantHandler(participant.id).catch(() => {
+                          deleteParticipantHandler(
+                            participant.id,
+                            props.project.id,
+                          ).catch(() => {
                             console.log('request failed');
                           })
                         }
@@ -314,7 +323,10 @@ export default function Project(props) {
                       <Button
                         css={deleteButton}
                         onClick={() =>
-                          deleteParticipantHandler(participant.id).catch(() => {
+                          deleteParticipantHandler(
+                            participant.id,
+                            props.project.id,
+                          ).catch(() => {
                             console.log('request failed');
                           })
                         }
@@ -327,7 +339,9 @@ export default function Project(props) {
             </CardContent>
           </Card>
           <div>
-            <Button href="/projects/47/chores">Continue</Button>
+            <Button href={`/projects/${props.project.id}/chores`}>
+              Continue
+            </Button>
           </div>
         </main>
       </Container>

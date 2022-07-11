@@ -30,10 +30,10 @@ WHERE id = ${id}`;
   return camelcaseKeys(participant);
 }
 
-export async function getParticipantsByProjectId(projectId) {
+export async function getParticipantsByProjectId(id) {
   const participants = await sql`
 SELECT * from project_participants
-WHERE project_id = ${projectId}`;
+WHERE project_id = ${id}`;
   return participants.map((participant) => camelcaseKeys(participant));
 }
 
@@ -247,4 +247,75 @@ AND
 AND
  projects.id = ${projectId}`;
   return project && camelcaseKeys(project);
+}
+
+// create a function that inserts list of chore ids into project_chores table
+export async function insertChoresIntoProject(projectId, choreIds) {
+  // loop over chore ids and create a list of lists containing projectId and a chore id for each chore
+  const choreValues = [];
+  for (let i = 0; i < choreIds.length; i++) {
+    choreValues.push({ project_id: projectId, chore_id: choreIds[i] });
+  }
+  console.log(choreValues);
+
+  const chores = await sql`
+  INSERT INTO project_chores ${sql(choreValues, 'project_id', 'chore_id')}`;
+  return chores.map((chore) => camelcaseKeys(chore));
+}
+
+// write a function that fetches all chores for a projectId
+export async function getChoresByProjectId(projectId) {
+  const chores = await sql`
+  SELECT
+   chores.id as chore_id,
+   chores.name as chore_name,
+   chores.weight as chore_weight,
+   chores.icon_name as chore_icon_name
+
+FROM
+  chores,
+  project_chores
+WHERE
+ project_chores.project_id = ${projectId}
+AND
+ project_chores.chore_id = chores.id`;
+  return chores.map((chore) => camelcaseKeys(chore));
+}
+
+// write a function sets assigned participant id on project_chores table of multiple chore ids
+export async function setAssignedParticipantId(
+  projectId,
+  choreIds,
+  participantId,
+) {
+  const chores =
+    await sql`update project_chores set assigned_participant_id = ${participantId} where chore_id in ${sql(
+      choreIds,
+    )} and project_id = ${projectId}  RETURNING *`;
+
+  return chores.map((chore) => camelcaseKeys(chore));
+}
+
+// write a function that fetches all chores for a projectId and a participant id
+export async function getChoresByProjectIdAndParticipantId(
+  projectId,
+  participantId,
+) {
+  const chores = await sql`
+  SELECT
+   chores.id as chore_id,
+   chores.name as chore_name,
+   chores.weight as chore_weight,
+   chores.icon_name as chore_icon_name
+
+FROM
+  chores,
+  project_chores
+WHERE
+ project_chores.project_id = ${projectId}
+AND
+ project_chores.chore_id = chores.id
+AND
+ project_chores.assigned_participant_id = ${participantId}`;
+  return chores.map((chore) => camelcaseKeys(chore));
 }

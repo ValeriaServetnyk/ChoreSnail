@@ -3,7 +3,7 @@ import {
   deleteParticipantById,
   getParticipantById,
   updateParticipantById,
-} from '../../../util/database';
+} from '../../../../../../util/database';
 
 // connecting to API method GETbyId PUT and DELETE
 
