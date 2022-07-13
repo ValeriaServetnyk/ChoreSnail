@@ -141,7 +141,7 @@ export default function UserDashboard(props: Props) {
 
   // useEffect(() => {
   //   async function getProjects() {
-  //     const response = await fetch('http://localhost:3000/api/projects');
+  //     const response = await fetch('/api/projects');
 
   //     const projects = await response.json();
   //     setProjectsList(projects);
@@ -154,7 +154,7 @@ export default function UserDashboard(props: Props) {
   // add project to the api on button click
 
   async function createProjectsHandler() {
-    const response = await fetch('http://localhost:3000/api/projects', {
+    const response = await fetch('/api/projects', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -179,7 +179,7 @@ export default function UserDashboard(props: Props) {
   }
 
   async function deleteProjectHandler(id: number) {
-    const response = await fetch(`http://localhost:3000/api/projects/${id}`, {
+    const response = await fetch(`/api/projects/${id}`, {
       method: 'DELETE',
       // headers: {
       //   'Content-Type': 'application/json',
@@ -194,7 +194,7 @@ export default function UserDashboard(props: Props) {
   }
 
   async function updateProjectHandler(id: number) {
-    const response = await fetch(`http://localhost:3000/api/projects/${id}`, {
+    const response = await fetch(`/api/projects/${id}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
@@ -402,83 +402,4 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
       permanent: false,
     },
   };
-}
-
-{
-  /* <Card sx={{ minWidth: 275 }} css={cardElements}>
-            <CardContent>
-              {projectsList.map((project) => {
-                // do if is active
-                return project.id === activeId ? (
-                  <Fragment key={project.id}>
-                    <TextField
-                      fullWidth
-                      id="standard-basic"
-                      label="Edit project name"
-                      variant="standard"
-                      value={editProjectName}
-                      onChange={(event) =>
-                        setEditProjectName(event.currentTarget.value)
-                      }
-                    />
-
-                    <Button
-                      css={emptyButtonStyles}
-                      onClick={() => {
-                        setActiveId(undefined);
-                        updateProjectHandler(project.id).catch(() => {
-                          console.log('request failed');
-                        });
-                      }}
-                    >
-                      Save
-                    </Button>
-                    <Button
-                      css={deleteButton}
-                      onClick={() =>
-                        deleteProjectHandler(project.id).catch(() => {
-                          console.log('request failed');
-                        })
-                      }
-                    >
-                      {' '}
-                      x
-                    </Button>
-                  </Fragment>
-                ) : (
-                  // do if is inactive
-                  <Fragment key={project.id}>
-                    <TextField
-                      fullWidth
-                      id="filled-basic"
-                      label="Project saved"
-                      variant="filled"
-                      value={project.projectName}
-                      disabled
-                    />
-
-                    <Button
-                      css={emptyButtonStyles}
-                      onClick={() => {
-                        setActiveId(project.id);
-                        setEditProjectName(project.projectName);
-                      }}
-                    >
-                      Edit
-                    </Button>
-                    <Button
-                      css={deleteButton}
-                      onClick={() =>
-                        deleteProjectHandler(project.id).catch(() => {
-                          console.log('request failed');
-                        })
-                      }
-                    >
-                      x
-                    </Button>
-                  </Fragment>
-                );
-              })}
-            </CardContent>
-          </Card> */
 }

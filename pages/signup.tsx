@@ -78,7 +78,7 @@ export default function Signup(props: Props) {
   const router = useRouter();
 
   async function registerHandler() {
-    const registerResponse = await fetch('http://localhost:3000/api/register', {
+    const registerResponse = await fetch('/api/register', {
       method: 'POST',
       headers: {
         'content-type': 'application/json',

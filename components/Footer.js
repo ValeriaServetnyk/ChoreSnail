@@ -13,7 +13,7 @@ export default function StickyFooter() {
     <Container maxWidth="sm" css={footerStyles}>
       <Typography variant="body2" color="text.secondary">
         Copyright ©{' '}
-        <Link color="inherit" href="hhttp://localhost:3000/">
+        <Link color="inherit" href="/">
           Choresnail
         </Link>{' '}
         {new Date().getFullYear()}

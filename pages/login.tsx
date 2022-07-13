@@ -56,7 +56,7 @@ export default function Login(props: Props) {
   const router = useRouter();
 
   async function loginHandler() {
-    const loginResponse = await fetch('http://localhost:3000/api/login', {
+    const loginResponse = await fetch('/api/login', {
       method: 'POST',
       headers: {
         'content-type': 'application/json',
@@ -186,7 +186,7 @@ export default function Login(props: Props) {
                 ))} */}
 
             <Grid item>
-              <Link href="signup" css={messageStyles}>
+              <Link href="/signup" css={messageStyles}>
                 Don't have an account? Sign Up
               </Link>
             </Grid>

@@ -160,7 +160,7 @@ export default function ProjectDasboard(props) {
   };
 
   // async function assignChores() {
-  //   const response = await fetch('http://localhost:3000/api/projects', {
+  //   const response = await fetch('/api/projects', {
   //     method: 'POST',
   //     headers: {
   //       'Content-Type': 'application/json',

@@ -128,19 +128,16 @@ export default function Chores(props: Props) {
   const router = useRouter();
 
   async function createChoreHandler() {
-    const response = await fetch(
-      `http://localhost:3000/api/projects/${props.project.id}/chores`,
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          choreId: projectChore,
-          projectId: props.project.id,
-        }),
+    const response = await fetch(`/api/projects/${props.project.id}/chores`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
       },
-    );
+      body: JSON.stringify({
+        choreId: projectChore,
+        projectId: props.project.id,
+      }),
+    });
 
     const createdList = await response.json();
 
@@ -166,16 +163,10 @@ export default function Chores(props: Props) {
         <main css={pageLayout}>
           <h1 css={titleStyles}>Pick chores for {props.project.projectName}</h1>
           <Breadcrumbs aria-label="breadcrumb" css={breadcrumbsStyles}>
-            <Link
-              color="inherit"
-              href="http://localhost:3000/users/private-profile"
-            >
+            <Link color="inherit" href="/users/private-profile">
               Dashboard
             </Link>
-            <Link
-              color="inherit"
-              href={`http://localhost:3000/projects/${props.project.id}`}
-            >
+            <Link color="inherit" href={`/projects/${props.project.id}`}>
               Add Participants
             </Link>
             <Typography css={breadcrumbsStyles} color="text.primary">
@@ -268,54 +259,3 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 
 // anything in gsp run on the server
 // props are passed to the function Chores - pass props when adding gsp to the function top as well as to the map function props.chores.map
-
-// export default function Chores(props: Props) {
-//   return (
-//     <div>
-//       <Head>
-//         <title>Add chores</title>
-
-//         <meta name="list of chores" content="add chores to your project" />
-//         <link rel="icon" href="/favicon.ico" />
-//       </Head>
-//       <main>
-//         <h1>Pick chores for your project</h1>
-//         <div>
-//           {props.chores.map((chore) => {
-//             return (
-//               <div key={`chore-${chore.id}`}>
-//                 <div>{chore.name}</div>
-//                 <div>Weight:{chore.weight}</div>
-//                 <Image
-//                   src={`/${chore.iconName}.png`}
-//                   width="100"
-//                   height="100"
-//                   alt="chore icons"
-//                 />
-//                 {/* <div>Created by:{chore.creator_id}</div> */}
-//               </div>
-//             );
-//           })}
-//         </div>
-//         <div>
-//           <Link href="/login">
-//             <a>Back</a>
-//           </Link>
-//           <Link href="/signup">
-//             <a>Create project</a>
-//           </Link>
-//         </div>
-//       </main>
-//     </div>
-//   );
-// }
-
-// export async function getServerSideProps() {
-//   const chores = await getChores();
-
-//   return {
-//     props: {
-//       chores: chores,
-//     },
-//   };
-// }

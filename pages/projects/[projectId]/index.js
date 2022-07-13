@@ -104,7 +104,7 @@ export default function Project(props) {
 
   async function createParticipantHandler() {
     const response = await fetch(
-      `http://localhost:3000/api/projects/${props.project.id}/participants`,
+      `/api/projects/${props.project.id}/participants`,
       {
         method: 'POST',
         headers: {
@@ -127,7 +127,7 @@ export default function Project(props) {
 
   async function deleteParticipantHandler(id, projectId) {
     const response = await fetch(
-      `http://localhost:3000/api/projects/${projectId}/participants/${id}`,
+      `/api/projects/${projectId}/participants/${id}`,
       {
         method: 'DELETE',
         // headers: {
@@ -145,7 +145,7 @@ export default function Project(props) {
 
   async function updateParticipantHandler(id, projectId) {
     const response = await fetch(
-      `http://localhost:3000/api/projects/${projectId}/participants/${id}`,
+      `/api/projects/${projectId}/participants/${id}`,
       {
         method: 'PUT',
         headers: {
@@ -199,7 +199,7 @@ export default function Project(props) {
             <Link
               underline="hover"
               color="inherit"
-              href="http://localhost:3000/users/private-profile"
+              href="/users/private-profile"
             >
               Dashboard
             </Link>
