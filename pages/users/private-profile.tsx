@@ -32,7 +32,7 @@ const popupTitleStyles = css`
   color: rgba(156, 85, 20, 1);
   font-size: 40px;
   font-weight: medium;
-
+  background-color: rgba(229, 208, 153, 0.38);
   font-family: Nunito;
 `;
 
@@ -93,6 +93,14 @@ const errorContainer = css`
   display: flex;
   align-items: center;
   flex-direction: column;
+`;
+
+const dialogBox = css`
+  background-color: rgba(229, 208, 153, 0.38);
+`;
+
+const dialogActions = css`
+  background-color: rgba(229, 208, 153, 0.38);
 `;
 
 type Project = {
@@ -181,10 +189,6 @@ export default function UserDashboard(props: Props) {
   async function deleteProjectHandler(id: number) {
     const response = await fetch(`/api/projects/${id}`, {
       method: 'DELETE',
-      // headers: {
-      //   'Content-Type': 'application/json',
-      // },
-      // body: JSON.stringify({ }),
     });
     const deletedProject = await response.json();
     const newState = projectsList.filter(
@@ -215,22 +219,22 @@ export default function UserDashboard(props: Props) {
     setProjectsList(newState);
   }
 
-  if (!props.user) {
-    return (
-      <>
-        <Head>
-          <title>User not found</title>
-          <meta
-            name="user not found"
-            content="no such user exists, please register"
-          />
-        </Head>
-        <main>
-          <h1>User not found, please register</h1>
-        </main>
-      </>
-    );
-  }
+  // if (!props.user) {
+  //   return (
+  //     <>
+  //       <Head>
+  //         <title>User not found</title>
+  //         <meta
+  //           name="user not found"
+  //           content="no such user exists, please register"
+  //         />
+  //       </Head>
+  //       <main>
+  //         <h1>User not found, please register</h1>
+  //       </main>
+  //     </>
+  //   );
+  // }
 
   return (
     <div>
@@ -253,13 +257,14 @@ export default function UserDashboard(props: Props) {
 
           <Dialog open={open} onClose={handleClose}>
             <DialogTitle css={popupTitleStyles}>What is planned? </DialogTitle>
-            <DialogContent>
+            <DialogContent css={dialogBox}>
               <TextField
                 margin="normal"
                 required
                 fullWidth
                 id="projectname"
                 label="Project name"
+                color="secondary"
                 name="Project name"
                 value={newProjectName}
                 onChange={(event) =>
@@ -284,7 +289,7 @@ export default function UserDashboard(props: Props) {
                 </div>
               </div>
             </DialogContent>
-            <DialogActions>
+            <DialogActions css={dialogActions}>
               <Button
                 css={emptyButtonStyles}
                 variant="outlined"
@@ -306,6 +311,7 @@ export default function UserDashboard(props: Props) {
                   <Fragment key={project.id}>
                     <TextField
                       fullWidth
+                      color="secondary"
                       id="standard-basic"
                       label="Edit project name"
                       variant="standard"

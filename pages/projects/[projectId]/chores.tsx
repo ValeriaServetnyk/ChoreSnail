@@ -88,7 +88,6 @@ const titleStyles = css`
 const buttonStyles = css`
   background-color: rgba(156, 85, 20, 1);
   border: none;
-
   margin-top: 40px;
   margin-bottom: 40px;
   color: white;

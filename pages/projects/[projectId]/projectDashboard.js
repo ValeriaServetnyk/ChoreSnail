@@ -37,13 +37,13 @@ const choreCardContainer = css`
   text-align: right;
 `;
 
-const cardElements = css`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: rgba(229, 208, 153, 0.38);
-  margin-top: 30px;
-`;
+// const cardElements = css`
+//   display: flex;
+//   align-items: center;
+//   justify-content: center;
+//   background-color: rgba(229, 208, 153, 0.38);
+//   margin-top: 30px;
+// `;
 
 const pageLayout = css`
   min-height: 100vh;
@@ -99,19 +99,18 @@ const emptyButtonStyles = css`
   }
 `;
 
-const buttonStyles = css`
-  background-color: rgba(156, 85, 20, 1);
-  border: none;
+// const buttonStyles = css`
+//   background-color: rgba(156, 85, 20, 1);
+//   border: none;
+//   margin-top: 30px;
+//   margin-bottom: 30px;
+//   color: white;
+//   font-family: Nunito;
 
-  margin-top: 30px;
-  margin-bottom: 30px;
-  color: white;
-  font-family: Nunito;
-
-  &:hover {
-    background-color: rgba(156, 85, 20, 0.8);
-  }
-`;
+//   &:hover {
+//     background-color: rgba(156, 85, 20, 0.8);
+//   }
+// `;
 
 const checkboxStyles = css`
   color: rgba(156, 85, 20, 1);
