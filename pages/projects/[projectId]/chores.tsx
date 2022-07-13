@@ -6,11 +6,19 @@ import ListDivider from '@mui/joy/ListDivider';
 import ListItem from '@mui/joy/ListItem';
 import ListItemContent from '@mui/joy/ListItemContent';
 import Sheet from '@mui/joy/Sheet';
-import Typography from '@mui/joy/Typography';
-import { Button, Checkbox, Container } from '@mui/material';
+// import Typography from '@mui/joy/Typography';
+import {
+  Breadcrumbs,
+  Button,
+  Checkbox,
+  Container,
+  Typography,
+} from '@mui/material';
 import { GetServerSidePropsContext } from 'next';
 import Head from 'next/head';
 import Image from 'next/image';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
 import { useState } from 'react';
 import {
   getChores,
@@ -39,8 +47,7 @@ type Project = {
 
 const choreTitleStyles = css`
   font-family: Nunito;
-  font-size: 20px;
-  font-weight: medium;
+  font-size: 18px;
 `;
 
 const pageLayout = css`
@@ -98,21 +105,27 @@ const buttonContainer = css`
   justify-content: center;
 `;
 
+const breadcrumbsStyles = css`
+  font-family: Nunito;
+`;
+
 export default function Chores(props: Props) {
   const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
 
   const [projectChore, setProjectChore] = useState<Chore[]>([]);
 
   const handleToggle = (id: number) => () => {
-    // const currentIndex = projectChore.indexOf(id);
+    const currentIndex = projectChore.indexOf(id);
     const newChecked = [...projectChore];
-    // if (currentIndex === -1) {
-    newChecked.push(id);
-    // } else {
-    //   newChecked.splice(currentIndex, 1);
-    // }
+    if (currentIndex === -1) {
+      newChecked.push(id);
+    } else {
+      newChecked.splice(currentIndex, 1);
+    }
     setProjectChore(newChecked);
   };
+
+  const router = useRouter();
 
   async function createChoreHandler() {
     const response = await fetch(
@@ -138,6 +151,7 @@ export default function Chores(props: Props) {
     const newState = [...createdList, projectChore];
 
     setProjectChore(newState);
+    await router.push(`/projects/${props.project.id}/projectDashboard`);
   }
 
   return (
@@ -151,7 +165,23 @@ export default function Chores(props: Props) {
       <Container>
         <main css={pageLayout}>
           <h1 css={titleStyles}>Pick chores for {props.project.projectName}</h1>
-
+          <Breadcrumbs aria-label="breadcrumb" css={breadcrumbsStyles}>
+            <Link
+              color="inherit"
+              href="http://localhost:3000/users/private-profile"
+            >
+              Dashboard
+            </Link>
+            <Link
+              color="inherit"
+              href={`http://localhost:3000/projects/${props.project.id}`}
+            >
+              Add Participants
+            </Link>
+            <Typography css={breadcrumbsStyles} color="text.primary">
+              Add Chores
+            </Typography>
+          </Breadcrumbs>
           <Sheet>
             <List>
               {props.chores.map((chore) => {

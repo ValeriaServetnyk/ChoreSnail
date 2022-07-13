@@ -44,12 +44,10 @@ function MyApp({ Component, pageProps }) {
               Helvetica Neue, sans-serif;
             /* min-height: 100vh; */
           }
-
           a {
             color: inherit;
             text-decoration: none;
           }
-
           * {
             box-sizing: border-box;
           }

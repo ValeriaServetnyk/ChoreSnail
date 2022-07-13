@@ -282,7 +282,7 @@ AND
   return chores.map((chore) => camelcaseKeys(chore));
 }
 
-// write a function sets assigned participant id on project_chores table of multiple chore ids
+// write a function that sets assigned participant id on project_chores table of multiple chore ids
 export async function setAssignedParticipantId(
   projectId,
   choreIds,

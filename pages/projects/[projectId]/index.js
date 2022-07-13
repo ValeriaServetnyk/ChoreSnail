@@ -23,7 +23,7 @@ const titleStyles = css`
   font-size: 40px;
   font-weight: medium;
   margin-top: 80px;
-  margin-bottom: 10px;
+  margin-bottom: 40px;
   font-family: Nunito;
 `;
 
@@ -73,6 +73,10 @@ const deleteButton = css`
   &:hover {
     background-color: rgba(156, 85, 20, 0.3);
   }
+`;
+
+const breadcrumbsStyles = css`
+  font-family: Nunito;
 `;
 
 export default function Project(props) {
@@ -191,16 +195,18 @@ export default function Project(props) {
           <h1 css={titleStyles}>
             Pick participants for {props.project.projectName}
           </h1>
-          {/* <Breadcrumbs aria-label="breadcrumb">
+          <Breadcrumbs aria-label="breadcrumb" css={breadcrumbsStyles}>
             <Link
               underline="hover"
               color="inherit"
-              href="users/private-profile"
+              href="http://localhost:3000/users/private-profile"
             >
               Dashboard
             </Link>
-            <Typography color="text.primary">Participants</Typography>
-          </Breadcrumbs> */}
+            <Typography css={breadcrumbsStyles} color="text.primary">
+              Add Participants
+            </Typography>
+          </Breadcrumbs>
           <TextField
             margin="normal"
             required
@@ -339,7 +345,10 @@ export default function Project(props) {
             </CardContent>
           </Card>
           <div>
-            <Button href={`/projects/${props.project.id}/chores`}>
+            <Button
+              href={`/projects/${props.project.id}/chores`}
+              css={buttonStyles}
+            >
               Continue
             </Button>
           </div>
