@@ -4,6 +4,14 @@ import {
   insertChoresIntoProject,
 } from '../../../../../util/database';
 
+export type RegisterResponseBody =
+  | {
+      errors: {
+        message: string;
+      }[];
+    }
+  | { user: { id: number } };
+
 // connecting to API methods GET and POST
 
 export default async function handler(
@@ -23,7 +31,7 @@ export default async function handler(
     if (!req.body.choreId) {
       return res
         .status(400)
-        .json({ error: 'please add chores to your project' });
+        .json({ errors: [{ message: 'please add chores to your project' }] });
     }
     const newChoresList = await insertChoresIntoProject(
       req.body.projectId,

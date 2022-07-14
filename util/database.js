@@ -37,6 +37,13 @@ WHERE project_id = ${id}`;
   return participants.map((participant) => camelcaseKeys(participant));
 }
 
+export async function getParticipantByProjectId(id) {
+  const [participant] = await sql`
+SELECT * from project_participants
+WHERE project_id = ${id}`;
+  return camelcaseKeys(participant);
+}
+
 // to delete participant by id
 export async function deleteParticipantById(id) {
   const [participant] = await sql`

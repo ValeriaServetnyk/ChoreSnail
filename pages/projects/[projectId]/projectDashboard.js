@@ -6,7 +6,6 @@ import ListDivider from '@mui/joy/ListDivider';
 import ListItem from '@mui/joy/ListItem';
 import ListItemButton from '@mui/joy/ListItemButton';
 import ListItemContent from '@mui/joy/ListItemContent';
-import Sheet from '@mui/joy/Sheet';
 import Typography from '@mui/joy/Typography';
 import {
   Button,
@@ -26,6 +25,7 @@ import { useEffect, useState } from 'react';
 import {
   getChoresByProjectId,
   getParticipantsByProjectId,
+  getProjectById,
 } from '../../../util/database';
 
 const choreTitleStyles = css`
@@ -74,7 +74,7 @@ const dashboardContainer = css`
 
 const participantsList = css`
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   gap: 40px;
 `;
 
@@ -99,18 +99,18 @@ const emptyButtonStyles = css`
   }
 `;
 
-// const buttonStyles = css`
-//   background-color: rgba(156, 85, 20, 1);
-//   border: none;
-//   margin-top: 30px;
-//   margin-bottom: 30px;
-//   color: white;
-//   font-family: Nunito;
+const buttonStyles = css`
+  background-color: rgba(156, 85, 20, 1);
+  border: none;
+  margin-top: 30px;
+  margin-bottom: 30px;
+  color: white;
+  font-family: Nunito;
 
-//   &:hover {
-//     background-color: rgba(156, 85, 20, 0.8);
-//   }
-// `;
+  &:hover {
+    background-color: rgba(156, 85, 20, 0.8);
+  }
+`;
 
 const checkboxStyles = css`
   color: rgba(156, 85, 20, 1);
@@ -122,24 +122,25 @@ const checkboxStyles = css`
 
 export default function ProjectDasboard(props) {
   const [totalWeight, setTotalWeight] = useState(0);
-  const [projectChore, setProjectChore] = useState([]);
+  const [projectParticipantChore, setProjectParticipantChore] = useState([]);
+  // const [projectChore, setProjectChore] = useState([]);
   const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
 
-  const [open, setOpen] = useState(false);
+  const [activeParticipantId, setActiveParticipantId] = useState(false);
 
-  const handleClickOpen = () => {
-    setOpen(true);
+  const handleClickOpen = (id) => {
+    setActiveParticipantId(id);
   };
 
   const handleClose = () => {
-    setOpen(false);
+    setActiveParticipantId(false);
   };
 
   useEffect(() => {
-    if (props.projectChores.length === 0) {
+    if (projectParticipantChore.length === 0) {
       return;
     }
-    const totalSum = props.projectChores.reduce((sum, chore) => {
+    const totalSum = projectParticipantChore.reduce((sum, chore) => {
       sum = sum + chore.choreWeight;
       return sum;
     }, 0);
@@ -148,36 +149,39 @@ export default function ProjectDasboard(props) {
   }, [totalWeight]);
 
   const handleToggle = (id) => () => {
-    const currentIndex = projectChore.indexOf(id);
-    const newChecked = [...projectChore];
+    const currentIndex = projectParticipantChore.indexOf(id);
+    const newChecked = [...projectParticipantChore];
     if (currentIndex === -1) {
       newChecked.push(id);
     } else {
       newChecked.splice(currentIndex, 1);
     }
-    setProjectChore(newChecked);
+    setProjectParticipantChore(newChecked);
   };
 
-  // async function assignChores() {
-  //   const response = await fetch('/api/projects', {
-  //     method: 'POST',
-  //     headers: {
-  //       'Content-Type': 'application/json',
-  //     },
-  //     body: JSON.stringify({
-  //       projectName: newProjectName,
-  //       creatorId: props.user.id,
-  //     }),
-  //   });
+  async function assignChoresHandler(id) {
+    const response = await fetch(
+      `/api/projects/${props.project.id}/participants/${id}/chore`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          projectId: props.project.id,
+          participantId: id,
+          choreId: projectParticipantChore,
+        }),
+      },
+    );
 
-  //   const createdProject = await response.json();
+    const createdList = await response.json();
+    const newState = [...createdList, projectParticipantChore];
 
-  //   const newState = [...projectsList, createdProject];
-  //   setProjectsList(newState);
-  //   setNewProjectName('');
-  //   // console.log(createdProject);
-  //   await router.push(`/projects/${createdProject.id}`);
-  // }
+    setProjectParticipantChore(newState);
+    setActiveParticipantId(false);
+    // await router.push(`/projects/${createdProject.id}`);
+  }
 
   return (
     <div>
@@ -201,14 +205,14 @@ export default function ProjectDasboard(props) {
                   <Stack key={participant.id}>
                     <Chip
                       label={`Pick chores for ${participant.participantName}`}
-                      onClick={handleClickOpen}
+                      onClick={() => handleClickOpen(participant.id)}
                     />
                   </Stack>
                 );
               })}
             </CardContent>
 
-            <Dialog open={open} onClose={handleClose}>
+            <Dialog open={activeParticipantId} onClose={handleClose}>
               <DialogTitle>Pick chores for this participant</DialogTitle>
               <DialogContent>
                 <List sx={{ py: 'var(--List-divider-gap)' }}>
@@ -247,7 +251,9 @@ export default function ProjectDasboard(props) {
                                   css={checkboxStyles}
                                   onChange={handleToggle(chore.choreId)}
                                   checked={
-                                    projectChore.indexOf(chore.choreId) !== -1
+                                    projectParticipantChore.indexOf(
+                                      chore.choreId,
+                                    ) !== -1
                                   }
                                   {...label}
                                   sx={{
@@ -256,8 +262,6 @@ export default function ProjectDasboard(props) {
                                 />
                               </div>
                             </ListItemContent>
-
-                            {/* <div>Created by:{chore.creator_id}</div> */}
                           </ListItemButton>
                         </ListItem>
                         <ListDivider inset="gutter" />
@@ -265,14 +269,26 @@ export default function ProjectDasboard(props) {
                     );
                   })}
                 </List>
+                <span css={totalContainer}>
+                  Total project load
+                  {totalWeight <= 10 ? (
+                    <div>😁</div>
+                  ) : totalWeight <= 20 ? (
+                    <div>🙄</div>
+                  ) : totalWeight <= 30 ? (
+                    <div>🤨</div>
+                  ) : (
+                    <div>🥵</div>
+                  )}
+                </span>
                 <div>
                   <Button
-                  // onClick={() => {
-                  //   assignChores().catch(() => {
-                  //     console.log('request failed');
-                  //   });
-                  // }}
-                  // css={buttonStyles}
+                    onClick={() => {
+                      assignChoresHandler(activeParticipantId).catch((e) => {
+                        console.log('request failed', e);
+                      });
+                    }}
+                    css={buttonStyles}
                   >
                     Add chores
                   </Button>
@@ -288,73 +304,6 @@ export default function ProjectDasboard(props) {
                 </Button>
               </DialogActions>
             </Dialog>
-
-            <Sheet
-              variant="outlined"
-              sx={{
-                display: 'flex',
-                flexDirection: 'column',
-                gap: 1,
-                width: 250,
-                borderRadius: 'sm',
-              }}
-            >
-              <List sx={{ py: 'var(--List-divider-gap)' }}>
-                {props.projectChores.map((chore) => {
-                  return (
-                    <div key={`chore-${chore.choreId}`}>
-                      <ListItem>
-                        <ListItemButton sx={{ gap: 2 }}>
-                          <AspectRatio
-                            sx={{
-                              flexBasis: 120,
-                              borderRadius: 'sm',
-                              overflow: 'auto',
-                            }}
-                          >
-                            <Image
-                              src={`/${chore.choreIconName}.png`}
-                              width="60"
-                              height="60"
-                              alt="chore icons"
-                            />
-                          </AspectRatio>
-                          <ListItemContent css={choreCardContainer}>
-                            <Typography css={choreTitleStyles}>
-                              {chore.choreName}
-                            </Typography>
-                            <div>
-                              {chore.choreWeight === 2 ? (
-                                <CircleIcon color="success" />
-                              ) : chore.choreWeight === 4 ? (
-                                <CircleIcon css={mediumLoadIcon} />
-                              ) : (
-                                <CircleIcon color="error" />
-                              )}
-                            </div>
-                          </ListItemContent>
-
-                          {/* <div>Created by:{chore.creator_id}</div> */}
-                        </ListItemButton>
-                      </ListItem>
-                      <ListDivider inset="gutter" />
-                    </div>
-                  );
-                })}
-              </List>
-              <span css={totalContainer}>
-                Total project load
-                {totalWeight <= 20 ? (
-                  <div>😁</div>
-                ) : totalWeight <= 40 ? (
-                  <div>🙄</div>
-                ) : totalWeight <= 60 ? (
-                  <div>🤨</div>
-                ) : (
-                  <div>🥵</div>
-                )}
-              </span>
-            </Sheet>
           </div>
         </Container>
       </main>
@@ -364,7 +313,7 @@ export default function ProjectDasboard(props) {
 
 export async function getServerSideProps(context) {
   const projectChores = await getChoresByProjectId(context.query.projectId);
-
+  const project = await getProjectById(context.query.projectId);
   const participants = await getParticipantsByProjectId(
     context.query.projectId,
   );
@@ -373,6 +322,7 @@ export async function getServerSideProps(context) {
     props: {
       projectChores,
       participants,
+      project,
     },
   };
 }

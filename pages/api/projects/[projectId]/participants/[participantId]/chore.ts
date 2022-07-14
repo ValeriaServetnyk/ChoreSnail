@@ -4,6 +4,14 @@ import {
   setAssignedParticipantId,
 } from '../../../../../../util/database';
 
+export type RegisterResponseBody =
+  | {
+      errors: {
+        message: string;
+      }[];
+    }
+  | { user: { id: number } };
+
 // connecting to API methods GET and POST
 
 export default async function handler(
@@ -13,19 +21,22 @@ export default async function handler(
   // if method GET
 
   if (req.method === 'GET') {
-    // get participants from database
     const participantsChores = await getChoresByProjectIdAndParticipantId(
       req.query.projectId,
+      req.query.participantId,
     );
+
     res.status(200).json(participantsChores);
   }
 
   // if method POST
   if (req.method === 'POST') {
     if (!req.body.choreId) {
-      return res
-        .status(400)
-        .json({ error: 'add chores to your project' });
+      return res.status(400).json({
+        errors: [
+          { message: 'pick chores for participants in order to proceed' },
+        ],
+      });
     }
     const assignChores = await setAssignedParticipantId(
       req.body.projectId,

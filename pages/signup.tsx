@@ -145,6 +145,7 @@ export default function Signup(props: Props) {
                 <TextField
                   required
                   fullWidth
+                  color="secondary"
                   id="name"
                   label="User name"
                   name="name"
@@ -159,6 +160,7 @@ export default function Signup(props: Props) {
                 <TextField
                   required
                   fullWidth
+                  color="secondary"
                   name="password"
                   label="Password"
                   type="password"
@@ -190,7 +192,7 @@ export default function Signup(props: Props) {
               fullWidth
               variant="outlined"
               sx={{ mt: 3, mb: 2 }}
-              href="/projects"
+              href="/projectsNoauth"
             >
               Skip registration
             </Button>

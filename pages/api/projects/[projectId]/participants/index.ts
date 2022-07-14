@@ -6,6 +6,14 @@ import {
 
 // connecting to API methods GET and POST
 
+export type RegisterResponseBody =
+  | {
+      errors: {
+        message: string;
+      }[];
+    }
+  | { user: { id: number } };
+
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse,
@@ -23,7 +31,9 @@ export default async function handler(
     if (!req.body.participantName || !req.body.participantEmail) {
       return res
         .status(400)
-        .json({ error: 'to add a user insert name and email' });
+        .json({
+          errors: [{ message: 'To add a user insert a name and an email' }],
+        });
     }
     const newParticipant = await insertParticipant(
       req.body.participantName,

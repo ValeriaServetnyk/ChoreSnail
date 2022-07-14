@@ -95,6 +95,17 @@ const userInputButton = css`
   margin-bottom: 20px;
 `;
 
+const errorMessageStyles = css`
+  font-family: Nunito;
+  color: rgba(226, 41, 41, 0.5);
+`;
+
+const errorContainer = css`
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+`;
+
 const participantsListStyles = css`
   display: flex;
   flex-direction: column;
@@ -116,6 +127,8 @@ export default function Project(props) {
 
   const [editName, setEditName] = useState('');
   const [editEmail, setEditEmail] = useState('');
+
+  const [errors, setErrors] = useState([]);
 
   useEffect(() => {
     setParticipantsList(props.participants);
@@ -141,6 +154,12 @@ export default function Project(props) {
     );
 
     const createdParticipant = await response.json();
+
+    if ('errors' in createdParticipant) {
+      setErrors(createdParticipant.errors);
+      return;
+    }
+
     const newState = [...participantsList, createdParticipant];
     setParticipantsList(newState);
     setNewName('');
@@ -248,17 +267,24 @@ export default function Project(props) {
                 onChange={(event) => setNewEmail(event.currentTarget.value)}
               />
             </div>
-            <div css={userInputButton}>
-              <Button
-                css={buttonStyles}
-                onClick={() => {
-                  createParticipantHandler().catch(() => {
-                    console.log('request failed');
-                  });
-                }}
-              >
-                Add participant
-              </Button>
+            <div css={errorContainer}>
+              <div css={userInputButton}>
+                <Button
+                  css={buttonStyles}
+                  onClick={() => {
+                    createParticipantHandler().catch(() => {
+                      console.log('request failed');
+                    });
+                  }}
+                >
+                  Add participant
+                </Button>
+              </div>
+              <div css={errorMessageStyles}>
+                {errors.map((error) => (
+                  <span key={`error-${error.message}`}>{error.message}</span>
+                ))}
+              </div>
             </div>
           </div>
           <hr />

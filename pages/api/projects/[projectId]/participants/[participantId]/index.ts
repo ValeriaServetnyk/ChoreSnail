@@ -34,7 +34,7 @@ export default async function handler(
     ) {
       return res
         .status(400)
-        .json({ error: 'need to add valid id name and email' });
+        .json({ errors: [{ message: 'need to add valid id name and email' }] });
     }
     const updatedParticipant = await updateParticipantById(
       participantId,

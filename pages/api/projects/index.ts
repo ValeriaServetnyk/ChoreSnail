@@ -18,7 +18,7 @@ export default async function handler(
   // if method GET
 
   if (req.method === 'GET') {
-    // get participants from database
+    // get projects from database
     const projects = await getProjects();
     res.status(200).json(projects);
   }
