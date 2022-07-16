@@ -123,7 +123,7 @@ const checkboxStyles = css`
 export default function ProjectDasboard(props) {
   const [totalWeight, setTotalWeight] = useState(0);
   const [projectParticipantChore, setProjectParticipantChore] = useState([]);
-  // const [projectChore, setProjectChore] = useState([]);
+  const [newChoresList, setNewChoresList] = useState([]);
   const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
 
   const [activeParticipantId, setActiveParticipantId] = useState(false);
@@ -157,6 +157,7 @@ export default function ProjectDasboard(props) {
       newChecked.splice(currentIndex, 1);
     }
     setProjectParticipantChore(newChecked);
+    console.log(newChecked);
   };
 
   async function assignChoresHandler(id) {
@@ -170,15 +171,12 @@ export default function ProjectDasboard(props) {
         body: JSON.stringify({
           projectId: props.project.id,
           participantId: id,
-          choreId: projectParticipantChore,
+          choreIds: projectParticipantChore,
         }),
       },
     );
 
-    const createdList = await response.json();
-    const newState = [...createdList, projectParticipantChore];
-
-    setProjectParticipantChore(newState);
+    setProjectParticipantChore([]);
     setActiveParticipantId(false);
     // await router.push(`/projects/${createdProject.id}`);
   }
@@ -305,6 +303,7 @@ export default function ProjectDasboard(props) {
               </DialogActions>
             </Dialog>
           </div>
+          <Button css={buttonStyles}>Share project</Button>
         </Container>
       </main>
     </div>

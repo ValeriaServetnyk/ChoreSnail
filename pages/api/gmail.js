@@ -8,11 +8,12 @@ config();
 export default function createEmailHandler(req, res) {
   if (req.method === 'POST') {
     if (
-      typeof request.body.participantName !== 'string' ||
-      !request.body.participantName ||
-      typeof request.body.participantEmail !== 'string' ||
-      !request.body.participantEmail
+      typeof req.body.participantName !== 'string' ||
+      !req.body.participantName ||
+      typeof req.body.participantEmail !== 'string' ||
+      !req.body.participantEmail
     ) {
+      console.log(req.body.participantEmail);
       res.status(400).json({ errors: [{ message: 'Invalid name or email' }] });
       return;
     }

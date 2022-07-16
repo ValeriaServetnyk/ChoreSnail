@@ -111,6 +111,10 @@ const participantsListStyles = css`
   flex-direction: column;
 `;
 
+const placeholderStyles = css`
+  color: rgba(115, 115, 115, 0.7);
+`;
+
 const participantsList = css``;
 export default function Project(props) {
   const [participantsList, setParticipantsList] = useState([]);
@@ -289,120 +293,124 @@ export default function Project(props) {
           </div>
           <hr />
           <Card sx={{ minWidth: 275 }} css={cardElements}>
-            <CardContent>
-              {participantsList
-                .sort((a, b) => a.id - b.id)
-                .map((participant) => {
-                  // do if is active
-                  return participant.id === activeId ? (
-                    <Fragment key={participant.id}>
-                      <div css={participantsListStyles}>
-                        <div>
-                          <TextField
-                            id="standard-basic"
-                            label="Edit participant name"
-                            variant="standard"
-                            value={editName}
-                            onChange={(event) =>
-                              setEditName(event.currentTarget.value)
-                            }
-                          />
+            {participantsList.length === 0 ? (
+              <h3 css={placeholderStyles}>Participants will appear here</h3>
+            ) : (
+              <CardContent>
+                {participantsList
+                  .sort((a, b) => a.id - b.id)
+                  .map((participant) => {
+                    // do if is active
+                    return participant.id === activeId ? (
+                      <Fragment key={participant.id}>
+                        <div css={participantsListStyles}>
+                          <div>
+                            <TextField
+                              id="standard-basic"
+                              label="Edit participant name"
+                              variant="standard"
+                              value={editName}
+                              onChange={(event) =>
+                                setEditName(event.currentTarget.value)
+                              }
+                            />
 
-                          <TextField
-                            id="standard-basic"
-                            label="Edit participant email"
-                            color="secondary"
-                            variant="standard"
-                            value={editEmail}
-                            onChange={(event) =>
-                              setEditEmail(event.currentTarget.value)
-                            }
-                          />
+                            <TextField
+                              id="standard-basic"
+                              label="Edit participant email"
+                              color="secondary"
+                              variant="standard"
+                              value={editEmail}
+                              onChange={(event) =>
+                                setEditEmail(event.currentTarget.value)
+                              }
+                            />
+                          </div>
+                          <div>
+                            <Button
+                              css={emptyButtonStyles}
+                              onClick={() => {
+                                setActiveId(undefined);
+                                updateParticipantHandler(
+                                  participant.id,
+                                  props.project.id,
+                                ).catch(() => {
+                                  console.log('request failed');
+                                });
+                              }}
+                            >
+                              Save
+                            </Button>
+                            <Button
+                              css={deleteButton}
+                              onClick={() =>
+                                deleteParticipantHandler(
+                                  participant.id,
+                                  props.project.id,
+                                ).catch(() => {
+                                  console.log('request failed');
+                                })
+                              }
+                            >
+                              x
+                            </Button>
+                          </div>
                         </div>
-                        <div>
-                          <Button
-                            css={emptyButtonStyles}
-                            onClick={() => {
-                              setActiveId(undefined);
-                              updateParticipantHandler(
-                                participant.id,
-                                props.project.id,
-                              ).catch(() => {
-                                console.log('request failed');
-                              });
-                            }}
-                          >
-                            Save
-                          </Button>
-                          <Button
-                            css={deleteButton}
-                            onClick={() =>
-                              deleteParticipantHandler(
-                                participant.id,
-                                props.project.id,
-                              ).catch(() => {
-                                console.log('request failed');
-                              })
-                            }
-                          >
-                            x
-                          </Button>
-                        </div>
-                      </div>
-                    </Fragment>
-                  ) : (
-                    // do if is inactive
-                    <Fragment key={participant.id}>
-                      <div css={participantsListStyles}>
-                        <div>
-                          <TextField
-                            value={participant.participantName}
-                            color="secondary"
-                            id="filled-basic"
-                            label="Participant name saved"
-                            variant="filled"
-                            disabled
-                          />
+                      </Fragment>
+                    ) : (
+                      // do if is inactive
+                      <Fragment key={participant.id}>
+                        <div css={participantsListStyles}>
+                          <div>
+                            <TextField
+                              value={participant.participantName}
+                              color="secondary"
+                              id="filled-basic"
+                              label="Participant name saved"
+                              variant="filled"
+                              disabled
+                            />
 
-                          <TextField
-                            id="filled-basic"
-                            color="secondary"
-                            label="Participant email saved"
-                            variant="filled"
-                            value={participant.participantEmail}
-                            disabled
-                          />
+                            <TextField
+                              id="filled-basic"
+                              color="secondary"
+                              label="Participant email saved"
+                              variant="filled"
+                              value={participant.participantEmail}
+                              disabled
+                            />
+                          </div>
+                          <div>
+                            <Button
+                              css={emptyButtonStyles}
+                              onClick={() => {
+                                setActiveId(participant.id);
+                                setEditName(participant.participantName);
+                                setEditEmail(participant.participantEmail);
+                              }}
+                            >
+                              Edit
+                            </Button>
+                            <Button
+                              css={deleteButton}
+                              onClick={() =>
+                                deleteParticipantHandler(
+                                  participant.id,
+                                  props.project.id,
+                                ).catch(() => {
+                                  console.log('request failed');
+                                })
+                              }
+                            >
+                              x
+                            </Button>
+                          </div>
                         </div>
-                        <div>
-                          <Button
-                            css={emptyButtonStyles}
-                            onClick={() => {
-                              setActiveId(participant.id);
-                              setEditName(participant.participantName);
-                              setEditEmail(participant.participantEmail);
-                            }}
-                          >
-                            Edit
-                          </Button>
-                          <Button
-                            css={deleteButton}
-                            onClick={() =>
-                              deleteParticipantHandler(
-                                participant.id,
-                                props.project.id,
-                              ).catch(() => {
-                                console.log('request failed');
-                              })
-                            }
-                          >
-                            x
-                          </Button>
-                        </div>
-                      </div>
-                    </Fragment>
-                  );
-                })}
-            </CardContent>
+                      </Fragment>
+                    );
+                  })}
+              </CardContent>
+            )}
           </Card>
           <div>
             <Button

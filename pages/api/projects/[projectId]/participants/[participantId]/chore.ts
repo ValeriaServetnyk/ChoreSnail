@@ -31,7 +31,7 @@ export default async function handler(
 
   // if method POST
   if (req.method === 'POST') {
-    if (!req.body.choreId) {
+    if (!req.body.choreIds) {
       return res.status(400).json({
         errors: [
           { message: 'pick chores for participants in order to proceed' },

@@ -102,6 +102,14 @@ const dialogActions = css`
   background-color: rgba(229, 208, 153, 0.38);
 `;
 
+const placeholderStyles = css`
+  color: rgba(115, 115, 115, 0.7);
+`;
+
+const secondHeader = css`
+  margin-bottom: 30px;
+  text-align: center;
+`;
 type Project = {
   id: number;
   projectName: string;
@@ -298,86 +306,91 @@ export default function UserDashboard(props: Props) {
               </Button>
             </DialogActions>
           </Dialog>
+
           {/* dialog box closed */}
-
-          <h1>My past projects</h1>
-
+          <div css={secondHeader}>
+            <h1>My past projects</h1>
+          </div>
           <Card sx={{ minWidth: 275 }} css={cardElements}>
-            <CardContent>
-              {projectsList.map((project) => {
-                // do if is active
-                return project.id === activeId ? (
-                  <Fragment key={project.id}>
-                    <TextField
-                      fullWidth
-                      color="secondary"
-                      id="standard-basic"
-                      label="Edit project name"
-                      variant="standard"
-                      value={editProjectName}
-                      onChange={(event) =>
-                        setEditProjectName(event.currentTarget.value)
-                      }
-                    />
+            {projectsList.length === 0 ? (
+              <h3 css={placeholderStyles}>Your projects will appear here</h3>
+            ) : (
+              <CardContent>
+                {projectsList.map((project) => {
+                  // do if is active
+                  return project.id === activeId ? (
+                    <Fragment key={project.id}>
+                      <TextField
+                        fullWidth
+                        color="secondary"
+                        id="standard-basic"
+                        label="Edit project name"
+                        variant="standard"
+                        value={editProjectName}
+                        onChange={(event) =>
+                          setEditProjectName(event.currentTarget.value)
+                        }
+                      />
 
-                    <Button
-                      css={emptyButtonStyles}
-                      onClick={() => {
-                        setActiveId(undefined);
-                        updateProjectHandler(project.id).catch(() => {
-                          console.log('request failed');
-                        });
-                      }}
-                    >
-                      Save
-                    </Button>
-                    <Button
-                      css={deleteButton}
-                      onClick={() =>
-                        deleteProjectHandler(project.id).catch(() => {
-                          console.log('request failed');
-                        })
-                      }
-                    >
-                      {' '}
-                      x
-                    </Button>
-                  </Fragment>
-                ) : (
-                  // do if is inactive
-                  <Fragment key={project.id}>
-                    <TextField
-                      fullWidth
-                      id="filled-basic"
-                      label="Project saved"
-                      variant="filled"
-                      value={project.projectName}
-                      disabled
-                    />
+                      <Button
+                        css={emptyButtonStyles}
+                        onClick={() => {
+                          setActiveId(undefined);
+                          updateProjectHandler(project.id).catch(() => {
+                            console.log('request failed');
+                          });
+                        }}
+                      >
+                        Save
+                      </Button>
+                      <Button
+                        css={deleteButton}
+                        onClick={() =>
+                          deleteProjectHandler(project.id).catch(() => {
+                            console.log('request failed');
+                          })
+                        }
+                      >
+                        {' '}
+                        x
+                      </Button>
+                    </Fragment>
+                  ) : (
+                    // do if is inactive
+                    <Fragment key={project.id}>
+                      <TextField
+                        fullWidth
+                        id="filled-basic"
+                        label="Project saved"
+                        variant="filled"
+                        value={project.projectName}
+                        disabled
+                      />
 
-                    <Button
-                      css={emptyButtonStyles}
-                      onClick={() => {
-                        setActiveId(project.id);
-                        setEditProjectName(project.projectName);
-                      }}
-                    >
-                      Edit
-                    </Button>
-                    <Button
-                      css={deleteButton}
-                      onClick={() =>
-                        deleteProjectHandler(project.id).catch(() => {
-                          console.log('request failed');
-                        })
-                      }
-                    >
-                      x
-                    </Button>
-                  </Fragment>
-                );
-              })}
-            </CardContent>
+                      <Button
+                        css={emptyButtonStyles}
+                        onClick={() => {
+                          setActiveId(project.id);
+                          setEditProjectName(project.projectName);
+                        }}
+                      >
+                        Edit
+                      </Button>
+                      <Button
+                        css={deleteButton}
+                        onClick={() =>
+                          deleteProjectHandler(project.id).catch(() => {
+                            console.log('request failed');
+                          })
+                        }
+                      >
+                        x
+                      </Button>
+                    </Fragment>
+                  );
+                })}
+              </CardContent>
+            )}
           </Card>
         </main>
       </Container>
