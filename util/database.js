@@ -189,17 +189,37 @@ export async function deleteExpiredSessions() {
   return sessions.map((session) => camelcaseKeys(session));
 }
 
-export async function createSession(token, userId) {
+export async function createSession(token, userId, CSRFSecret) {
   const [session] = await sql`
   INSERT INTO sessions
-  (token, user_id)
-  VALUES (${token}, ${userId})
+  (token, user_id, csrf_secret)
+  VALUES (${token}, ${userId}, ${CSRFSecret})
    RETURNING
    id,
    token`;
   await deleteExpiredSessions();
 
   return camelcaseKeys(session);
+}
+
+export async function getValidSessionByToken(token) {
+  if (!token) return undefined;
+
+  const [session] = await sql`
+  SELECT
+    sessions.id,
+    sessions.token,
+    sessions.csrf_secret
+  FROM
+    sessions
+  WHERE
+    sessions.token = ${token} AND
+    sessions.expiry_timestamp > now();
+  `;
+
+  await deleteExpiredSessions();
+
+  return session && camelcaseKeys(session);
 }
 
 export async function getUserByValidSessionToken(token) {

@@ -313,8 +313,7 @@ export default function Project(props) {
                               onChange={(event) =>
                                 setEditName(event.currentTarget.value)
                               }
-                            />
-
+                            />{' '}
                             <TextField
                               id="standard-basic"
                               label="Edit participant email"
@@ -369,8 +368,7 @@ export default function Project(props) {
                               label="Participant name saved"
                               variant="filled"
                               disabled
-                            />
-
+                            />{' '}
                             <TextField
                               id="filled-basic"
                               color="secondary"

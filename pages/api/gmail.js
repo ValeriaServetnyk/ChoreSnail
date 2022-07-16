@@ -45,7 +45,7 @@ export default function createEmailHandler(req, res) {
       },
     });
     const mailData = transporter.sendMail({
-      from: 'Choresnail <choresnail@gmail.com>',
+      from: 'Choresnail 🐌  <choresnail@gmail.com>',
       to: req_body.email,
       subject: `${req_body.name} you have got stuff to do`,
       text: JSON.stringify(req_body.message),

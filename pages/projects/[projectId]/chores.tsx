@@ -24,6 +24,7 @@ import {
   getChores,
   getParticipantsByProjectId,
   getProjectById,
+  getValidSessionByToken,
 } from '../../../util/database';
 
 type Props = {
@@ -112,6 +113,10 @@ export default function Chores(props: Props) {
   const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
 
   const [projectChore, setProjectChore] = useState<Chore[]>([]);
+
+  if ('errors' in props) {
+    return <h1>Chores are not available</h1>;
+  }
 
   const handleToggle = (id: number) => () => {
     const currentIndex = projectChore.indexOf(id);
@@ -241,6 +246,15 @@ export default function Chores(props: Props) {
 }
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
+  const sessionToken = context.req.cookies.sessionToken;
+  const sessionId = await getValidSessionByToken(sessionToken);
+
+  if (!sessionId) {
+    return {
+      props: { errors: ['You must be logged in to view this page'] },
+    };
+  }
+
   const chores = await getChores();
   const project = await getProjectById(context.query.projectId);
   const participants = await getParticipantsByProjectId(

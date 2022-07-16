@@ -26,6 +26,7 @@ import {
   getChoresByProjectId,
   getParticipantsByProjectId,
   getProjectById,
+  getValidSessionByToken,
 } from '../../../util/database';
 
 const choreTitleStyles = css`
@@ -147,7 +148,7 @@ const choreElement = css`
   justify-content: space-between;
 `;
 
-export default function ProjectDasboard(props) {
+export default function ProjectDashboard(props) {
   const [totalWeight, setTotalWeight] = useState(0);
   const [projectParticipantChore, setProjectParticipantChore] = useState([]);
   const [newChoresList, setNewChoresList] = useState([]);
@@ -156,6 +157,10 @@ export default function ProjectDasboard(props) {
   const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
 
   const [activeParticipantId, setActiveParticipantId] = useState(false);
+
+  if ('errors' in props) {
+    return <h1>Chores are not available</h1>;
+  }
 
   const handleClickOpen = (id) => {
     setActiveParticipantId(id);
@@ -373,6 +378,15 @@ export default function ProjectDasboard(props) {
 }
 
 export async function getServerSideProps(context) {
+  const sessionToken = context.req.cookies.sessionToken;
+  const sessionId = await getValidSessionByToken(sessionToken);
+
+  if (!sessionId) {
+    return {
+      props: { errors: ['You must be logged in to view this page'] },
+    };
+  }
+
   const projectChores = await getChoresByProjectId(context.query.projectId);
   const project = await getProjectById(context.query.projectId);
   const participants = await getParticipantsByProjectId(
