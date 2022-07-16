@@ -112,6 +112,11 @@ const buttonStyles = css`
   }
 `;
 
+const buttonContainer = css`
+  margin-top: 30px;
+  text-align: center;
+`;
+
 const checkboxStyles = css`
   color: rgba(156, 85, 20, 1);
 
@@ -120,10 +125,34 @@ const checkboxStyles = css`
   }
 `;
 
+const dialogBox = css`
+  background-color: rgba(229, 208, 153, 0.38);
+`;
+
+const dialogActions = css`
+  background-color: rgba(229, 208, 153, 0.38);
+`;
+
+const popupTitleStyles = css`
+  color: rgba(156, 85, 20, 1);
+  font-size: 20px;
+  font-weight: medium;
+  background-color: rgba(229, 208, 153, 0.38);
+  font-family: Nunito;
+`;
+
+const choreElement = css`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+`;
+
 export default function ProjectDasboard(props) {
   const [totalWeight, setTotalWeight] = useState(0);
   const [projectParticipantChore, setProjectParticipantChore] = useState([]);
   const [newChoresList, setNewChoresList] = useState([]);
+
+  // checkbox variable
   const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
 
   const [activeParticipantId, setActiveParticipantId] = useState(false);
@@ -181,6 +210,33 @@ export default function ProjectDasboard(props) {
     // await router.push(`/projects/${createdProject.id}`);
   }
 
+  async function sendEmailHandler() {
+    console.log('send email');
+    for (const participant of props.participants) {
+      const chores_list = await fetch(
+        `/api/projects/${props.project.id}/participants/${participant.id}/chore`,
+      );
+      const data = {
+        name: participant.participantName,
+        email: participant.participantEmail,
+        message: await chores_list.json(),
+      };
+      // send email to the participant using gmail route
+      const choreNameList = [];
+      for (const chore of data.message) {
+        choreNameList.push(chore.choreName);
+      }
+      data.message = choreNameList.join(', ');
+      const res = await fetch('/api/gmail', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      });
+    }
+  }
+
   return (
     <div>
       <Head>
@@ -211,8 +267,10 @@ export default function ProjectDasboard(props) {
             </CardContent>
 
             <Dialog open={activeParticipantId} onClose={handleClose}>
-              <DialogTitle>Pick chores for this participant</DialogTitle>
-              <DialogContent>
+              <DialogTitle css={popupTitleStyles}>
+                Pick chores for this participant
+              </DialogTitle>
+              <DialogContent css={dialogBox}>
                 <List sx={{ py: 'var(--List-divider-gap)' }}>
                   {props.projectChores.map((chore) => {
                     return (
@@ -237,7 +295,7 @@ export default function ProjectDasboard(props) {
                               <Typography css={choreTitleStyles}>
                                 {chore.choreName}
                               </Typography>
-                              <div>
+                              <div css={choreElement}>
                                 {chore.choreWeight === 2 ? (
                                   <CircleIcon color="success" />
                                 ) : chore.choreWeight === 4 ? (
@@ -292,7 +350,7 @@ export default function ProjectDasboard(props) {
                   </Button>
                 </div>
               </DialogContent>
-              <DialogActions>
+              <DialogActions css={dialogActions}>
                 <Button
                   css={emptyButtonStyles}
                   variant="outlined"
@@ -303,7 +361,11 @@ export default function ProjectDasboard(props) {
               </DialogActions>
             </Dialog>
           </div>
-          <Button css={buttonStyles}>Share project</Button>
+          <div css={buttonContainer}>
+            <Button css={buttonStyles} onClick={sendEmailHandler}>
+              Share project
+            </Button>
+          </div>
         </Container>
       </main>
     </div>

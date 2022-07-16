@@ -1,17 +1,18 @@
 import { config } from 'dotenv-safe';
 import { google } from 'googleapis';
-import { request } from 'http';
 import nodemailer from 'nodemailer';
 
 config();
 
 export default function createEmailHandler(req, res) {
   if (req.method === 'POST') {
+    const req_body = req.body;
+    console.log();
     if (
-      typeof req.body.participantName !== 'string' ||
-      !req.body.participantName ||
-      typeof req.body.participantEmail !== 'string' ||
-      !req.body.participantEmail
+      typeof req_body.name !== 'string' ||
+      !req_body.name ||
+      typeof req_body.email !== 'string' ||
+      !req_body.email
     ) {
       console.log(req.body.participantEmail);
       res.status(400).json({ errors: [{ message: 'Invalid name or email' }] });
@@ -45,12 +46,12 @@ export default function createEmailHandler(req, res) {
     });
     const mailData = transporter.sendMail({
       from: 'Choresnail <choresnail@gmail.com>',
-      to: 'Leraservetnik@gmail.com',
-      // request.body.email,
-      subject: 'Sending Email using Node.js',
-      text: 'That was easy!',
+      to: req_body.email,
+      subject: `${req_body.name} you have got stuff to do`,
+      text: JSON.stringify(req_body.message),
+      html: `<h2> Here is your task: </h2> <p>${req_body.message}</p>`,
     });
-    response.status(200).json({ mailData: mailData });
+    res.status(200).json({ mailData: mailData });
     return;
   }
   res.status(405).json({ errors: [{ message: 'Method not allowed' }] });
