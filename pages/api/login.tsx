@@ -1,6 +1,10 @@
 import crypto from 'node:crypto';
 import bcrypt from 'bcrypt';
-import { NextApiRequest, NextApiResponse } from 'next';
+import {
+  GetServerSidePropsContext,
+  NextApiRequest,
+  NextApiResponse,
+} from 'next';
 import { createCSRFSecret } from '../../util/auth';
 import { createSerializedRegisterSessionTokenCookie } from '../../util/cookies';
 import {
@@ -82,4 +86,24 @@ export default async function handler(
   } else {
     res.status(405).json({ errors: [{ message: 'method not allowed' }] });
   }
+}
+
+export function getServerSideProps(context: GetServerSidePropsContext) {
+  // Redirect from HTTP to HTTPS on Heroku
+  if (
+    context.req.headers.host &&
+    context.req.headers['x-forwarded-proto'] &&
+    context.req.headers['x-forwarded-proto'] !== 'https'
+  ) {
+    return {
+      redirect: {
+        destination: `https://${context.req.headers.host}/login`,
+        permanent: true,
+      },
+    };
+  }
+
+  return {
+    props: {},
+  };
 }

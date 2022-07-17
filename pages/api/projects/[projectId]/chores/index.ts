@@ -42,5 +42,5 @@ export default async function handler(
   }
 
   // return this if we use any method that is not allowed
-  res.status(405).end();
+  res.status(405).json({error: 'Method not allowed'});
 }

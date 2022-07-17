@@ -22,6 +22,7 @@ import {
 import Head from 'next/head';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
+import { createCsrfToken } from '../../../util/auth';
 import {
   getChoresByProjectId,
   getParticipantsByProjectId,
@@ -206,10 +207,15 @@ export default function ProjectDashboard(props) {
           projectId: props.project.id,
           participantId: id,
           choreIds: projectParticipantChore,
+          csrfToken: props.csrfToken,
         }),
       },
     );
-
+    // const removedChores = await response.json();
+    // const newState = projectParticipantChore.filter(
+    //   (chore) => !removedChores.includes(chore),
+    // );
+    // setProjectParticipantChore(newState);
     setProjectParticipantChore([]);
     setActiveParticipantId(false);
     // await router.push(`/projects/${createdProject.id}`);
@@ -379,14 +385,14 @@ export default function ProjectDashboard(props) {
 
 export async function getServerSideProps(context) {
   const sessionToken = context.req.cookies.sessionToken;
-  const sessionId = await getValidSessionByToken(sessionToken);
+  const session = await getValidSessionByToken(sessionToken);
 
-  if (!sessionId) {
+  if (!session) {
     return {
       props: { errors: ['You must be logged in to view this page'] },
     };
   }
-
+  const csrfToken = await createCsrfToken(session.csrfSecret);
   const projectChores = await getChoresByProjectId(context.query.projectId);
   const project = await getProjectById(context.query.projectId);
   const participants = await getParticipantsByProjectId(
@@ -398,6 +404,7 @@ export async function getServerSideProps(context) {
       projectChores,
       participants,
       project,
+      csrfToken,
     },
   };
 }

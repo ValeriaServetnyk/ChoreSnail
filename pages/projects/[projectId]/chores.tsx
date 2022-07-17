@@ -20,6 +20,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
+import { createCsrfToken } from '../../../util/auth';
 import {
   getChores,
   getParticipantsByProjectId,
@@ -30,6 +31,7 @@ import {
 type Props = {
   chores: Chore[];
   project: Project;
+  csrfToken: string;
 };
 
 type Chore = {
@@ -140,6 +142,7 @@ export default function Chores(props: Props) {
       body: JSON.stringify({
         choreId: projectChore,
         projectId: props.project.id,
+        csrfToken: props.csrfToken,
       }),
     });
 
@@ -247,9 +250,9 @@ export default function Chores(props: Props) {
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const sessionToken = context.req.cookies.sessionToken;
-  const sessionId = await getValidSessionByToken(sessionToken);
+  const session = await getValidSessionByToken(sessionToken);
 
-  if (!sessionId) {
+  if (!session) {
     return {
       props: { errors: ['You must be logged in to view this page'] },
     };
@@ -260,12 +263,14 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   const participants = await getParticipantsByProjectId(
     context.query.projectId,
   );
+  const csrfToken = await createCsrfToken(session.csrfSecret);
 
   return {
     props: {
       chores: chores,
       project: project,
       participants: participants,
+      csrfToken: csrfToken,
     },
   };
 }

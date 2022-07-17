@@ -11,10 +11,12 @@ import {
 } from '@mui/material';
 import Head from 'next/head';
 import { Fragment, useEffect, useState } from 'react';
+import { createCsrfToken } from '../../../util/auth';
 import {
   getParticipantsByProjectId,
   getProjectById,
   getUserByValidSessionToken,
+  getValidSessionByToken,
   isCreator,
 } from '../../../util/database';
 
@@ -115,6 +117,10 @@ const placeholderStyles = css`
   color: rgba(115, 115, 115, 0.7);
 `;
 
+const buttonContainer = css`
+  text-align: right;
+`;
+
 const participantsList = css``;
 export default function Project(props) {
   const [participantsList, setParticipantsList] = useState([]);
@@ -153,6 +159,7 @@ export default function Project(props) {
           participantName: newName,
           participantEmail: newEmail,
           projectId: props.project.id,
+          csrfToken: props.csrfToken,
         }),
       },
     );
@@ -175,6 +182,12 @@ export default function Project(props) {
       `/api/projects/${projectId}/participants/${id}`,
       {
         method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          csrfToken: props.csrfToken,
+        }),
       },
     );
     const deletedParticipant = await response.json();
@@ -195,6 +208,7 @@ export default function Project(props) {
         body: JSON.stringify({
           participantName: editName,
           participantEmail: editEmail,
+          csrfToken: props.csrfToken,
         }),
       },
     );
@@ -410,7 +424,7 @@ export default function Project(props) {
               </CardContent>
             )}
           </Card>
-          <div>
+          <div css={buttonContainer}>
             <Button
               href={`/projects/${props.project.id}/chores`}
               css={buttonStyles}
@@ -457,11 +471,21 @@ export async function getServerSideProps(context) {
   const participants = await getParticipantsByProjectId(
     context.query.projectId,
   );
+  const sessionToken = context.req.cookies.sessionToken;
+  const session = await getValidSessionByToken(sessionToken);
+
+  if (!session) {
+    return {
+      props: { errors: ['You must be logged in to view this page'] },
+    };
+  }
+  const csrfToken = await createCsrfToken(session.csrfSecret);
 
   return {
     props: {
       project,
       participants,
+      csrfToken: csrfToken,
     },
   };
 }

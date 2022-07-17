@@ -14,9 +14,11 @@ import { GetServerSidePropsContext } from 'next';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { Fragment, useState } from 'react';
+import { createCsrfToken } from '../../util/auth';
 import {
   getProjectsByValidSessionToken,
   getUserByValidSessionToken,
+  getValidSessionByToken,
 } from '../../util/database';
 
 const titleStyles = css`
@@ -122,6 +124,7 @@ type Props = {
     username: string;
   };
   projects: Project[];
+  csrfToken: string;
 };
 
 export default function UserDashboard(props: Props) {
@@ -177,6 +180,7 @@ export default function UserDashboard(props: Props) {
       body: JSON.stringify({
         projectName: newProjectName,
         creatorId: props.user.id,
+        csrfToken: props.csrfToken,
       }),
     });
 
@@ -196,6 +200,12 @@ export default function UserDashboard(props: Props) {
   async function deleteProjectHandler(id: number) {
     const response = await fetch(`/api/projects/${id}`, {
       method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        csrfToken: props.csrfToken,
+      }),
     });
     const deletedProject = await response.json();
     const newState = projectsList.filter(
@@ -212,6 +222,7 @@ export default function UserDashboard(props: Props) {
       },
       body: JSON.stringify({
         projectName: editProjectName,
+        csrfToken: props.csrfToken,
       }),
     });
 
@@ -225,23 +236,6 @@ export default function UserDashboard(props: Props) {
     });
     setProjectsList(newState);
   }
-
-  // if (!props.user) {
-  //   return (
-  //     <>
-  //       <Head>
-  //         <title>User not found</title>
-  //         <meta
-  //           name="user not found"
-  //           content="no such user exists, please register"
-  //         />
-  //       </Head>
-  //       <main>
-  //         <h1>User not found, please register</h1>
-  //       </main>
-  //     </>
-  //   );
-  // }
 
   return (
     <div>
@@ -407,10 +401,22 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     const projects = await getProjectsByValidSessionToken(
       context.req.cookies.sessionToken,
     );
+
+    const sessionToken = context.req.cookies.sessionToken;
+    const session = await getValidSessionByToken(sessionToken);
+
+    if (!session) {
+      return {
+        props: { errors: ['You must be logged in to view this page'] },
+      };
+    }
+    const csrfToken = await createCsrfToken(session.csrfSecret);
+
     return {
       props: {
         user: user,
         projects: projects,
+        csrfToken: csrfToken,
       },
     };
   }
