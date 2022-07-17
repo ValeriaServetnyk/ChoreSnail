@@ -393,6 +393,16 @@ export default function UserDashboard(props: Props) {
 }
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
+  const sessionToken = context.req.cookies.sessionToken;
+  const session = await getValidSessionByToken(sessionToken);
+
+  if (!session) {
+    return {
+      props: { errors: ['You must be logged in to view this page'] },
+    };
+  }
+  const csrfToken = await createCsrfToken(session.csrfSecret);
+
   const user = await getUserByValidSessionToken(
     context.req.cookies.sessionToken,
   );
@@ -401,16 +411,6 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     const projects = await getProjectsByValidSessionToken(
       context.req.cookies.sessionToken,
     );
-
-    const sessionToken = context.req.cookies.sessionToken;
-    const session = await getValidSessionByToken(sessionToken);
-
-    if (!session) {
-      return {
-        props: { errors: ['You must be logged in to view this page'] },
-      };
-    }
-    const csrfToken = await createCsrfToken(session.csrfSecret);
 
     return {
       props: {

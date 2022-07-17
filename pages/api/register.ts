@@ -63,6 +63,5 @@ export default async function handler(
       .json({ user: { id: newUser.id, username: newUser.username } });
   } else {
     res.status(405).json({ errors: [{ message: 'method not allowed' }] });
-    return;
   }
 }

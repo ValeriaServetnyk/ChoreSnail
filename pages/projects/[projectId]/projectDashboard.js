@@ -39,14 +39,6 @@ const choreCardContainer = css`
   text-align: right;
 `;
 
-// const cardElements = css`
-//   display: flex;
-//   align-items: center;
-//   justify-content: center;
-//   background-color: rgba(229, 208, 153, 0.38);
-//   margin-top: 30px;
-// `;
-
 const pageLayout = css`
   min-height: 100vh;
 `;
@@ -211,26 +203,27 @@ export default function ProjectDashboard(props) {
         }),
       },
     );
-    // const removedChores = await response.json();
-    // const newState = projectParticipantChore.filter(
-    //   (chore) => !removedChores.includes(chore),
-    // );
-    // setProjectParticipantChore(newState);
+
+    // remove the selected chores from the list
+    const deletedChore = await response.json();
+    const newState = props.projectChores.filter(
+      (chore) => chore.id !== deletedChore.id,
+    );
+    setNewChoresList(newState);
     setProjectParticipantChore([]);
     setActiveParticipantId(false);
-    // await router.push(`/projects/${createdProject.id}`);
   }
 
   async function sendEmailHandler() {
     console.log('send email');
     for (const participant of props.participants) {
-      const chores_list = await fetch(
+      const choresList = await fetch(
         `/api/projects/${props.project.id}/participants/${participant.id}/chore`,
       );
       const data = {
         name: participant.participantName,
         email: participant.participantEmail,
-        message: await chores_list.json(),
+        message: await choresList.json(),
       };
       // send email to the participant using gmail route
       const choreNameList = [];
@@ -246,6 +239,7 @@ export default function ProjectDashboard(props) {
         body: JSON.stringify(data),
       });
     }
+    // await router.push(`/users/private-profile`);
   }
 
   return (

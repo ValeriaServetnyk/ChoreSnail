@@ -6,13 +6,13 @@ config();
 
 export default function createEmailHandler(req, res) {
   if (req.method === 'POST') {
-    const req_body = req.body;
+    const reqBody = req.body;
 
     if (
-      typeof req_body.name !== 'string' ||
-      !req_body.name ||
-      typeof req_body.email !== 'string' ||
-      !req_body.email
+      typeof reqBody.name !== 'string' ||
+      !reqBody.name ||
+      typeof reqBody.email !== 'string' ||
+      !reqBody.email
     ) {
       // console.log(req.body.participantEmail);
       res.status(400).json({ errors: [{ message: 'Invalid name or email' }] });
@@ -46,13 +46,13 @@ export default function createEmailHandler(req, res) {
     });
     const mailData = transporter.sendMail({
       from: 'Choresnail 🐌  <choresnail@gmail.com>',
-      to: req_body.email,
-      subject: `${req_body.name} you have got stuff to do`,
-      text: JSON.stringify(req_body.message),
-      html: `<h2> Here is your task: </h2> <p>${req_body.message}</p>`,
+      to: reqBody.email,
+      subject: `${reqBody.name} you have got stuff to do`,
+      text: JSON.stringify(reqBody.message),
+      html: `<h2> Here is your task: </h2> <p>${reqBody.message}</p>`,
     });
     res.status(200).json({ mailData: mailData });
     return;
   }
-  res.status(405).json({ errors: [{ message: 'Method not allowed' }] });
+  res.status(405).json({ errors: [{ message: 'method not allowed' }] });
 }

@@ -28,11 +28,11 @@ export default async function handler(
       req.query.participantId,
     );
 
-    res.status(200).json(participantsChores);
+    return res.status(200).json(participantsChores);
   }
 
-   // check for the csrfToken
-   if (!req.body.csrfToken) {
+  // check for the csrfToken
+  if (!req.body.csrfToken) {
     return res.status(400).json({
       error: 'no csrf token Found',
     });
@@ -78,5 +78,6 @@ export default async function handler(
   }
 
   // return this if we use any method that is not allowed
-  res.status(405).json({error: 'Method not allowed'});
+
+  res.status(405).json({ errors: [{ message: 'method not allowed' }] });
 }

@@ -73,5 +73,5 @@ export default async function handler(
     return res.status(200).json(deletedProject);
   }
   // if other method used that is not allowed
-  res.status(405).json({ error: 'method not allowed' });
+  res.status(405).json({ errors: [{ message: 'method not allowed' }] });
 }

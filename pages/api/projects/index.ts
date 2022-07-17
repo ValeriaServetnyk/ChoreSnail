@@ -25,7 +25,7 @@ export default async function handler(
   if (req.method === 'GET') {
     // get projects from database
     const projects = await getProjects();
-    res.status(200).json(projects);
+    return res.status(200).json(projects);
   }
 
   // check for the csrfToken
@@ -70,5 +70,5 @@ export default async function handler(
     return res.status(200).json(newProject);
   }
   // return this if we use any method that is not allowed
-  res.status(405).json({ error: 'Method not allowed' });
+  res.status(405).json({ errors: [{ message: 'method not allowed' }] });
 }

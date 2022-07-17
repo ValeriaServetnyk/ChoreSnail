@@ -25,7 +25,7 @@ export default async function handler(
   if (req.method === 'GET') {
     // get participants from database
     const participants = await getParticipantsByProjectId(req.query.projectId);
-    res.status(200).json(participants);
+    return res.status(200).json(participants);
   }
 
   // check for the csrfToken
@@ -73,5 +73,5 @@ export default async function handler(
   }
 
   // return this if we use any method that is not allowed
-  res.status(405).json({ error: 'Method not allowed' });
+  res.status(405).json({ errors: [{ message: 'method not allowed' }] });
 }
