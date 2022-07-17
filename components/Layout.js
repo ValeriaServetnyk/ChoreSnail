@@ -1,6 +1,4 @@
 import Footer from './Footer';
-// import Image from 'next/image';
-// import Link from 'next/link';
 import Header from './Header';
 
 export default function Layout(props) {

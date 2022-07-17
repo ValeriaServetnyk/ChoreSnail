@@ -121,7 +121,6 @@ const buttonContainer = css`
   text-align: right;
 `;
 
-const participantsList = css``;
 export default function Project(props) {
   const [participantsList, setParticipantsList] = useState([]);
 
@@ -143,7 +142,6 @@ export default function Project(props) {
   useEffect(() => {
     setParticipantsList(props.participants);
   }, [props.participants]);
-  // console.log('participantsList', participantsList);
 
   // add participants to the api on button click
 

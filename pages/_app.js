@@ -36,7 +36,7 @@ function MyApp({ Component, pageProps }) {
           html,
           body {
             background-color: rgba(229, 208, 153, 0.2);
-            /* color: rgba(172, 93, 21, 1); */
+
             padding: 0;
             margin: 0;
             font-family: Nunito, Indie Flower, -apple-system, BlinkMacSystemFont,

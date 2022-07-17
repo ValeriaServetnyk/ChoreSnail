@@ -144,7 +144,7 @@ const choreElement = css`
 export default function ProjectDashboard(props) {
   const [totalWeight, setTotalWeight] = useState(0);
   const [projectParticipantChore, setProjectParticipantChore] = useState([]);
-  const [newChoresList, setNewChoresList] = useState([]);
+  // const [newChoresList, setNewChoresList] = useState([]);
 
   // checkbox variable
   const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
@@ -173,7 +173,7 @@ export default function ProjectDashboard(props) {
     }, 0);
 
     setTotalWeight(totalSum);
-  }, [totalWeight]);
+  }, []);
 
   const handleToggle = (id) => () => {
     const currentIndex = projectParticipantChore.indexOf(id);
@@ -205,11 +205,11 @@ export default function ProjectDashboard(props) {
     );
 
     // remove the selected chores from the list
-    const deletedChore = await response.json();
-    const newState = props.projectChores.filter(
-      (chore) => chore.id !== deletedChore.id,
-    );
-    setNewChoresList(newState);
+    // const deletedChore = await response.json();
+    // const newState = props.projectChores.filter(
+    //   (chore) => chore.id !== deletedChore.id,
+    // );
+    // setNewChoresList(newState);
     setProjectParticipantChore([]);
     setActiveParticipantId(false);
   }

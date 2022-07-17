@@ -113,6 +113,7 @@ export default function Chores(props) {
   const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
 
   const [projectChore, setProjectChore] = useState([]);
+  const router = useRouter();
 
   if ('errors' in props) {
     return <h1>Chores are not available</h1>;
@@ -128,8 +129,6 @@ export default function Chores(props) {
     }
     setProjectChore(newChecked);
   };
-
-  const router = useRouter();
 
   async function createChoreHandler() {
     const response = await fetch(`/api/projects/${props.project.id}/chores`, {
@@ -219,8 +218,6 @@ export default function Chores(props) {
                           />
                         </div>
                       </ListItemContent>
-
-                      {/* <div>Created by:{chore.creator_id}</div> */}
                     </ListItem>
                     <ListDivider />
                   </div>

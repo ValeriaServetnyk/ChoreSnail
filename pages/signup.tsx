@@ -44,19 +44,20 @@ const buttonStyles = css`
   }
 `;
 
-const emptyButtonStyles = css`
-  border-color: rgba(156, 85, 20, 1);
+// const emptyButtonStyles = css`
+//   border-color: rgba(156, 85, 20, 1);
 
-  font-size: 15px;
-  margin-top: 60px;
+//   font-size: 15px;
+//   margin-top: 60px;
 
-  color: rgba(156, 85, 20, 1);
+//   color: rgba(156, 85, 20, 1);
 
-  &:hover {
-    background-color: rgba(156, 85, 20, 0.3);
-    border-color: rgba(156, 85, 20, 1);
-  }
-`;
+//   &:hover {
+//     background-color: rgba(156, 85, 20, 0.3);
+//     border-color: rgba(156, 85, 20, 1);
+//   }
+// `;
+
 const titleStyles = css`
   color: rgba(156, 85, 20, 1);
   font-size: 30px;
@@ -186,7 +187,7 @@ export default function Signup(props: Props) {
                 <span key={`error-${error.message}`}>{error.message}</span>
               ))}
             </div>
-            <Button
+            {/* <Button
               css={emptyButtonStyles}
               type="submit"
               fullWidth
@@ -195,7 +196,7 @@ export default function Signup(props: Props) {
               href="/projectsNoauth"
             >
               Skip registration
-            </Button>
+            </Button> */}
             <Grid container justifyContent="flex-end">
               <Grid item>
                 <Link href="/login" css={messageStyles}>

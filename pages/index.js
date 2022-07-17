@@ -1,7 +1,6 @@
 import { css, keyframes } from '@emotion/react';
 import { Button, Container } from '@mui/material';
 import Head from 'next/head';
-import Image from 'next/image';
 import { useEffect } from 'react';
 
 const buttonStyles = css`
@@ -146,14 +145,7 @@ export default function Home(props) {
                 </Button>
               </div>
             </div>
-            {/* <div>
-              <Image
-                src="/blob1.svg"
-                alt="random blob"
-                width="800"
-                height="500"
-              />
-            </div> */}
+
             <lottie-player
               src="https://assets4.lottiefiles.com/packages/lf20_jwqugkrv.json"
               background="transparent"
