@@ -72,14 +72,14 @@ const participantsList = css`
   gap: 40px;
 `;
 
-const totalContainer = css`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-  gap: 20px;
-  margin-bottom: 10px;
-`;
+// const totalContainer = css`
+//   display: flex;
+//   flex-direction: row;
+//   align-items: center;
+//   justify-content: center;
+//   gap: 20px;
+//   margin-bottom: 10px;
+// `;
 
 const emptyButtonStyles = css`
   border-color: rgba(156, 85, 20, 1);
@@ -142,7 +142,7 @@ const choreElement = css`
 `;
 
 export default function ProjectDashboard(props) {
-  const [totalWeight, setTotalWeight] = useState(0);
+  // const [totalWeight, setTotalWeight] = useState(0);
   const [projectParticipantChore, setProjectParticipantChore] = useState([]);
   // const [newChoresList, setNewChoresList] = useState([]);
 
@@ -155,6 +155,18 @@ export default function ProjectDashboard(props) {
     return <h1>Chores are not available</h1>;
   }
 
+  // useEffect(() => {
+  //   if (projectParticipantChore.length === 0) {
+  //     return;
+  //   }
+  //   const totalSum = projectParticipantChore.reduce((sum, chore) => {
+  //     sum = sum + chore.choreWeight;
+  //     return sum;
+  //   }, 0);
+
+  //   setTotalWeight(totalSum);
+  // }, [projectParticipantChore]);
+
   const handleClickOpen = (id) => {
     setActiveParticipantId(id);
   };
@@ -162,18 +174,6 @@ export default function ProjectDashboard(props) {
   const handleClose = () => {
     setActiveParticipantId(false);
   };
-
-  useEffect(() => {
-    if (projectParticipantChore.length === 0) {
-      return;
-    }
-    const totalSum = projectParticipantChore.reduce((sum, chore) => {
-      sum = sum + chore.choreWeight;
-      return sum;
-    }, 0);
-
-    setTotalWeight(totalSum);
-  }, []);
 
   const handleToggle = (id) => () => {
     const currentIndex = projectParticipantChore.indexOf(id);
@@ -330,7 +330,7 @@ export default function ProjectDashboard(props) {
                     );
                   })}
                 </List>
-                <span css={totalContainer}>
+                {/* <span css={totalContainer}>
                   Total project load
                   {totalWeight <= 10 ? (
                     <div>😁</div>
@@ -341,7 +341,7 @@ export default function ProjectDashboard(props) {
                   ) : (
                     <div>🥵</div>
                   )}
-                </span>
+                </span> */}
                 <div>
                   <Button
                     onClick={() => {
