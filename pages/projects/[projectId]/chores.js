@@ -6,7 +6,6 @@ import ListDivider from '@mui/joy/ListDivider';
 import ListItem from '@mui/joy/ListItem';
 import ListItemContent from '@mui/joy/ListItemContent';
 import Sheet from '@mui/joy/Sheet';
-// import Typography from '@mui/joy/Typography';
 import {
   Breadcrumbs,
   Button,
@@ -14,7 +13,6 @@ import {
   Container,
   Typography,
 } from '@mui/material';
-import { GetServerSidePropsContext } from 'next';
 import Head from 'next/head';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -28,25 +26,25 @@ import {
   getValidSessionByToken,
 } from '../../../util/database';
 
-type Props = {
-  chores: Chore[];
-  project: Project;
-  csrfToken: string;
-};
+// type Props = {
+//   chores: Chore[];
+//   project: Project;
+//   csrfToken: string;
+// };
 
-type Chore = {
-  id: number;
-  name: string;
-  weight: number;
-  creatorId: number;
-  iconName: string;
-};
+// type Chore = {
+//   id: number;
+//   name: string;
+//   weight: number;
+//   creatorId: number;
+//   iconName: string;
+// };
 
-type Project = {
-  id: number;
-  projectName: string;
-  creatorId: number;
-};
+// type Project = {
+//   id: number;
+//   projectName: string;
+//   creatorId: number;
+// };
 
 const choreTitleStyles = css`
   font-family: Nunito;
@@ -111,16 +109,16 @@ const breadcrumbsStyles = css`
   font-family: Nunito;
 `;
 
-export default function Chores(props: Props) {
+export default function Chores(props) {
   const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
 
-  const [projectChore, setProjectChore] = useState<Chore[]>([]);
+  const [projectChore, setProjectChore] = useState([]);
 
   if ('errors' in props) {
     return <h1>Chores are not available</h1>;
   }
 
-  const handleToggle = (id: number) => () => {
+  const handleToggle = (id) => () => {
     const currentIndex = projectChore.indexOf(id);
     const newChecked = [...projectChore];
     if (currentIndex === -1) {
@@ -248,7 +246,7 @@ export default function Chores(props: Props) {
   );
 }
 
-export async function getServerSideProps(context: GetServerSidePropsContext) {
+export async function getServerSideProps(context) {
   const sessionToken = context.req.cookies.sessionToken;
   const session = await getValidSessionByToken(sessionToken);
 

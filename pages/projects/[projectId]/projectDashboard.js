@@ -35,10 +35,6 @@ const choreTitleStyles = css`
   font-size: 15px;
 `;
 
-const choreCardContainer = css`
-  text-align: right;
-`;
-
 const pageLayout = css`
   min-height: 100vh;
 `;
@@ -54,6 +50,10 @@ const titleStyles = css`
   margin-top: 80px;
   margin-bottom: 60px;
   font-family: Nunito;
+`;
+
+const choreCardContainer = css`
+  text-align: right;
 `;
 
 const dashboardContainer = css`
