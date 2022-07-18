@@ -354,3 +354,23 @@ AND
  project_chores.assigned_participant_id = ${participantId}`;
   return chores.map((chore) => camelcaseKeys(chore));
 }
+
+// write a function that returns assigned project chores for a project id
+export async function getAssignedChoresByProjectId(projectId) {
+  const chores = await sql`
+  SELECT
+   chores.id as chore_id,
+   chores.name as chore_name,
+   chores.weight as chore_weight,
+   chores.icon_name as chore_icon_name
+  FROM
+    chores,
+    project_chores
+  WHERE
+    project_chores.project_id = ${projectId}
+  AND
+    project_chores.chore_id = chores.id
+  AND
+    project_chores.assigned_participant_id IS NULL`;
+  return chores.map((chore) => camelcaseKeys(chore));
+}

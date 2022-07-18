@@ -17,7 +17,7 @@ import Head from 'next/head';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { createCsrfToken } from '../../../util/auth';
 import {
   getChores,
@@ -118,31 +118,32 @@ const totalContainer = css`
   margin-bottom: 10px;
 `;
 
+const errorMessageStyles = css`
+  font-family: Nunito;
+  color: rgba(226, 41, 41, 0.5);
+`;
+
 export default function Chores(props) {
   const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
   const [projectChore, setProjectChore] = useState([]);
-  const [totalWeight, setTotalWeight] = useState(0);
-
+  // const [totalWeight, setTotalWeight] = useState(0);
+  const [errors, setErrors] = useState([]);
   const router = useRouter();
 
-  if ('errors' in props) {
-    return <h1>Chores are not available</h1>;
-  }
+  // useEffect(() => {
+  //   if (projectChore.length === 0) {
+  //     return;
+  //   }
 
-  useEffect(() => {
-    if (projectChore.length === 0) {
-      return;
-    }
+  //   const totalSum = 0;
+  //   for (const chore of props.chores) {
+  //     if (projectChore.includes(chore.id)) {
+  //       totalSum += chore.weight;
+  //     }
+  //   }
 
-    const totalSum = 0;
-    for (const chore of props.chores) {
-      if (projectChore.includes(chore.id)) {
-        totalSum += chore.weight;
-      }
-    }
-
-    setTotalWeight(totalSum);
-  }, [projectChore]);
+  //   setTotalWeight(totalSum);
+  // }, [projectChore]);
 
   const handleToggle = (id) => () => {
     const currentIndex = projectChore.indexOf(id);
@@ -170,14 +171,18 @@ export default function Chores(props) {
 
     const createdList = await response.json();
 
-    // if ('errors' in createdProject) {
-    //   setErrors(createdProject.errors);
-    //   return;
-    // }
+    if ('errors' in createdList) {
+      setErrors(createdList.errors);
+      return;
+    }
     const newState = [...createdList, projectChore];
 
     setProjectChore(newState);
     await router.push(`/projects/${props.project.id}/projectDashboard`);
+  }
+
+  if ('errors' in props) {
+    return <h1>Chores are not available</h1>;
   }
 
   return (
@@ -250,7 +255,7 @@ export default function Chores(props) {
               })}
             </List>
           </Sheet>
-          <span css={totalContainer}>
+          {/* <span css={totalContainer}>
             Total project load{totalWeight}
             {/* {totalWeight <= 10 ? (
               <div>😁</div>
@@ -261,7 +266,7 @@ export default function Chores(props) {
             ) : (
               <div>🥵</div>
             )} */}
-          </span>
+
           <div css={buttonContainer}>
             <Button
               css={buttonStyles}
@@ -273,6 +278,11 @@ export default function Chores(props) {
             >
               Add Chores
             </Button>
+            <div css={errorMessageStyles}>
+              {errors.map((error) => (
+                <span key={`error-${error.message}`}>{error.message}</span>
+              ))}
+            </div>
           </div>
         </main>
       </Container>

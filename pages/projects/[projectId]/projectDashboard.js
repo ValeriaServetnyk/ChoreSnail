@@ -21,10 +21,11 @@ import {
 } from '@mui/material';
 import Head from 'next/head';
 import Image from 'next/image';
+import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { createCsrfToken } from '../../../util/auth';
 import {
-  getChoresByProjectId,
+  getAssignedChoresByProjectId,
   getParticipantsByProjectId,
   getProjectById,
   getValidSessionByToken,
@@ -141,31 +142,31 @@ const choreElement = css`
   justify-content: space-between;
 `;
 
+const secondHeader = css`
+  margin-bottom: 30px;
+  text-align: center;
+`;
+
 export default function ProjectDashboard(props) {
   const [totalWeight, setTotalWeight] = useState(0);
   const [projectParticipantChore, setProjectParticipantChore] = useState([]);
-  // const [newChoresList, setNewChoresList] = useState([]);
+
+  const [newChoresList, setNewChoresList] = useState(props.projectChores);
+  const router = useRouter();
 
   // checkbox variable
   const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
 
   const [activeParticipantId, setActiveParticipantId] = useState(false);
 
-  if ('errors' in props) {
-    return <h1>Chores are not available</h1>;
-  }
-
   useEffect(() => {
     if (projectParticipantChore.length === 0) {
       return;
     }
-
-    const totalSum = 0;
-
+    let totalSum = 0;
     for (const chore of props.projectChores) {
       if (projectParticipantChore.includes(chore.choreId)) {
         totalSum += chore.choreWeight;
-        console.log(totalSum);
       }
     }
     setTotalWeight(totalSum);
@@ -210,17 +211,17 @@ export default function ProjectDashboard(props) {
     );
 
     // remove the selected chores from the list
-    // const deletedChore = await response.json();
-    // const newState = props.projectChores.filter(
-    //   (chore) => chore.id !== deletedChore.id,
-    // );
-    // setNewChoresList(newState);
+    const res2 = await fetch(
+      `/api/projects/${props.project.id}/chores/unassigned`,
+    );
+    const newState = await res2.json();
+    setNewChoresList(newState);
     setProjectParticipantChore([]);
     setActiveParticipantId(false);
   }
 
   async function sendEmailHandler() {
-    console.log('send email');
+    console.log('email sent');
     for (const participant of props.participants) {
       const choresList = await fetch(
         `/api/projects/${props.project.id}/participants/${participant.id}/chore`,
@@ -244,7 +245,11 @@ export default function ProjectDashboard(props) {
         body: JSON.stringify(data),
       });
     }
-    // await router.push(`/users/private-profile`);
+    await router.push(`/users/private-profile`);
+  }
+
+  if ('errors' in props) {
+    return <h1>Chores are not available</h1>;
   }
 
   return (
@@ -261,7 +266,7 @@ export default function ProjectDashboard(props) {
       <main css={pageLayout}>
         <Container>
           <h1 css={titleStyles}> Project summary</h1>
-          <h2>{props.project.projectName}</h2>
+          <h2 css={secondHeader}>{props.project.projectName}</h2>
 
           <div css={dashboardContainer}>
             <CardContent css={participantsList}>
@@ -283,7 +288,7 @@ export default function ProjectDashboard(props) {
               </DialogTitle>
               <DialogContent css={dialogBox}>
                 <List sx={{ py: 'var(--List-divider-gap)' }}>
-                  {props.projectChores.map((chore) => {
+                  {newChoresList.map((chore) => {
                     return (
                       <div key={`chore-${chore.choreId}`}>
                         <ListItem>
@@ -393,7 +398,9 @@ export async function getServerSideProps(context) {
     };
   }
   const csrfToken = await createCsrfToken(session.csrfSecret);
-  const projectChores = await getChoresByProjectId(context.query.projectId);
+  const projectChores = await getAssignedChoresByProjectId(
+    context.query.projectId,
+  );
   const project = await getProjectById(context.query.projectId);
   const participants = await getParticipantsByProjectId(
     context.query.projectId,
