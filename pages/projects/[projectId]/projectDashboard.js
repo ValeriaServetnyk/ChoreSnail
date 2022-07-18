@@ -72,14 +72,14 @@ const participantsList = css`
   gap: 40px;
 `;
 
-// const totalContainer = css`
-//   display: flex;
-//   flex-direction: row;
-//   align-items: center;
-//   justify-content: center;
-//   gap: 20px;
-//   margin-bottom: 10px;
-// `;
+const totalContainer = css`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  margin-bottom: 10px;
+`;
 
 const emptyButtonStyles = css`
   border-color: rgba(156, 85, 20, 1);
@@ -142,7 +142,7 @@ const choreElement = css`
 `;
 
 export default function ProjectDashboard(props) {
-  // const [totalWeight, setTotalWeight] = useState(0);
+  const [totalWeight, setTotalWeight] = useState(0);
   const [projectParticipantChore, setProjectParticipantChore] = useState([]);
   // const [newChoresList, setNewChoresList] = useState([]);
 
@@ -155,17 +155,22 @@ export default function ProjectDashboard(props) {
     return <h1>Chores are not available</h1>;
   }
 
-  // useEffect(() => {
-  //   if (projectParticipantChore.length === 0) {
-  //     return;
-  //   }
-  //   const totalSum = projectParticipantChore.reduce((sum, chore) => {
-  //     sum = sum + chore.choreWeight;
-  //     return sum;
-  //   }, 0);
+  useEffect(() => {
+    if (projectParticipantChore.length === 0) {
+      return;
+    }
 
-  //   setTotalWeight(totalSum);
-  // }, [projectParticipantChore]);
+    const totalSum = 0;
+
+    for (const chore of props.projectChores) {
+      if (projectParticipantChore.includes(chore.choreId)) {
+        totalSum += chore.choreWeight;
+        console.log(totalSum);
+      }
+    }
+    setTotalWeight(totalSum);
+    console.log(totalSum);
+  }, [projectParticipantChore]);
 
   const handleClickOpen = (id) => {
     setActiveParticipantId(id);
@@ -256,6 +261,7 @@ export default function ProjectDashboard(props) {
       <main css={pageLayout}>
         <Container>
           <h1 css={titleStyles}> Project summary</h1>
+          <h2>{props.project.projectName}</h2>
 
           <div css={dashboardContainer}>
             <CardContent css={participantsList}>
@@ -330,18 +336,18 @@ export default function ProjectDashboard(props) {
                     );
                   })}
                 </List>
-                {/* <span css={totalContainer}>
+                <span css={totalContainer}>
                   Total project load
-                  {totalWeight <= 10 ? (
+                  {totalWeight <= 12 ? (
                     <div>😁</div>
-                  ) : totalWeight <= 20 ? (
+                  ) : totalWeight <= 16 ? (
                     <div>🙄</div>
-                  ) : totalWeight <= 30 ? (
+                  ) : totalWeight <= 20 ? (
                     <div>🤨</div>
                   ) : (
                     <div>🥵</div>
                   )}
-                </span> */}
+                </span>
                 <div>
                   <Button
                     onClick={() => {

@@ -17,7 +17,7 @@ import Head from 'next/head';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { createCsrfToken } from '../../../util/auth';
 import {
   getChores,
@@ -109,15 +109,40 @@ const breadcrumbsStyles = css`
   font-family: Nunito;
 `;
 
+const totalContainer = css`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  margin-bottom: 10px;
+`;
+
 export default function Chores(props) {
   const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
-
   const [projectChore, setProjectChore] = useState([]);
+  const [totalWeight, setTotalWeight] = useState(0);
+
   const router = useRouter();
 
   if ('errors' in props) {
     return <h1>Chores are not available</h1>;
   }
+
+  useEffect(() => {
+    if (projectChore.length === 0) {
+      return;
+    }
+
+    const totalSum = 0;
+    for (const chore of props.chores) {
+      if (projectChore.includes(chore.id)) {
+        totalSum += chore.weight;
+      }
+    }
+
+    setTotalWeight(totalSum);
+  }, [projectChore]);
 
   const handleToggle = (id) => () => {
     const currentIndex = projectChore.indexOf(id);
@@ -225,6 +250,18 @@ export default function Chores(props) {
               })}
             </List>
           </Sheet>
+          <span css={totalContainer}>
+            Total project load{totalWeight}
+            {/* {totalWeight <= 10 ? (
+              <div>😁</div>
+            ) : totalWeight <= 20 ? (
+              <div>🙄</div>
+            ) : totalWeight <= 30 ? (
+              <div>🤨</div>
+            ) : (
+              <div>🥵</div>
+            )} */}
+          </span>
           <div css={buttonContainer}>
             <Button
               css={buttonStyles}
