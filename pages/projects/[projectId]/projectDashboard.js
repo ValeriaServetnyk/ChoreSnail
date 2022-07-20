@@ -170,7 +170,6 @@ export default function ProjectDashboard(props) {
       }
     }
     setTotalWeight(totalSum);
-    console.log(totalSum);
   }, [projectParticipantChore]);
 
   const handleClickOpen = (id) => {
@@ -304,7 +303,7 @@ export default function ProjectDashboard(props) {
                                 src={`/${chore.choreIconName}.png`}
                                 width="60"
                                 height="60"
-                                alt="chore icons"
+                                alt="chore icon"
                               />
                             </AspectRatio>
                             <ListItemContent css={choreCardContainer}>
@@ -355,6 +354,7 @@ export default function ProjectDashboard(props) {
                 </span>
                 <div>
                   <Button
+                    aria-label="add chores and redirect to project dashboard"
                     onClick={() => {
                       assignChoresHandler(activeParticipantId).catch((e) => {
                         console.log('request failed', e);
@@ -378,7 +378,11 @@ export default function ProjectDashboard(props) {
             </Dialog>
           </div>
           <div css={buttonContainer}>
-            <Button css={buttonStyles} onClick={sendEmailHandler}>
+            <Button
+              css={buttonStyles}
+              aria-label="email list of chores to participants"
+              onClick={sendEmailHandler}
+            >
               Share project
             </Button>
           </div>

@@ -224,7 +224,7 @@ export default function Chores(props) {
                           src={`/${chore.iconName}.png`}
                           width="100"
                           height="100"
-                          alt="chore icons"
+                          alt="icon for a chore name"
                         />
                       </AspectRatio>
                       <ListItemContent css={choreCardContainer}>

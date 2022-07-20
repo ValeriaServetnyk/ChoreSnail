@@ -1,75 +1,112 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Choresnail - fully responsive web app built with Next.js
 
-## Getting Started
+Responsive web app for dividing the load of the household projects equally among participants. Users can create their household projects in the app, assign participants, and pick from the list of chores to add to their projects. Users then can assign the chores to the participants based on their load, making sure that each participant got an equal amount of work.
 
-First, run the development server:
+**Coming soon:**
 
-```bash
-npm run dev
-# or
+1. Automatic assign, when the app assigns the chores based on the load per participant.
+2. Review section where users can comment on the past projects or re-initiate them
+
+**Technologies:**
+
+Client: Next.js, React, Typescript, Emotion JS, Material UI
+Server: Node.js, PostgreSQL
+Testing: Playwright, Jest
+
+## User roadmap
+
+<img src="/public/app1.png" width="380" height="580">
+<img src="/public/app2.png" width="380" height="580">
+<img src="/public/app3.png" width="380" height="580">
+<img src="/public/app4.png" width="380" height="580">
+<img src="/public/app5.png" width="380" height="580">
+<img src="/public/app6.png" width="380" height="580">
+<img src="/public/app7.png" width="380" height="580">
+<img src="/public/app8.png" width="380" height="580">
+
+## Setup
+
+Clone the repo from GitHub and then install the dependencies:
+
+```
+git clone https://github.com/ValeriaServetnyk/choresnail.git
+cd choresnail
+yarn
+```
+
+Setup a database with postgres on your computer:
+
+```
+psql <login>
+CREATE DATABASE <database name>;
+CREATE USER <username> WITH ENCRYPTED PASSWORD '<pw>';
+GRANT ALL PRIVILEGES ON DATABASE <database name> TO <user name>;
+```
+
+Create a .env file with the user info for the database and create .env.example as a template file for user info
+
+Use migrations:
+
+```
+yarn migrate up
+```
+
+To delete data from database run:
+
+```
+yarn migrate down
+```
+
+To run the development server:
+
+```
 yarn dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `pages/index.js`. The page auto-updates as you edit the file.
+To create the production build of the project run:
 
-## Database Setup
+```
+yarn build
+yarn start
+```
 
-Copy the .env.example file to a new file called .env (ignored from Git) and fill in the necessary information.
+# Libraries
 
-Follow the instructions from the PostgreSQL step in UpLeveled's System Setup Instructions.
+Postgres.js
+@emotion/css
+JS Cookie
+dotenv-safe
+ley
+bcrypt
+nodemailer
+Gmail API
 
-Then, connect to the built-in postgres database as administrator in order to create the database:
+## Deployment
 
-# Windows
-
-If it asks for a password, use postgres.
-
-psql -U postgres
-
-# macOS
-
-psql postgres
-
-# Linux
-
-sudo -u postgres psql
-
-Once you have connected, run the following to create the database:
-
-CREATE DATABASE <database name>;
-CREATE USER <user name> WITH ENCRYPTED PASSWORD '<user password>';
-GRANT ALL PRIVILEGES ON DATABASE <database name> TO <user name>;
-
-Quit psql using the following command:
-
-\q
-
-On Linux, you will also need to create a Linux system user with a name matching the user name you used in the database. It will prompt you to create a password for the user - choose the same password as for the database above.
-
-sudo adduser <user name>
-
-Once you're ready to use the new user, reconnect using the following command.
-
-# Windows and macOS:
-
-psql -U <user name> <database name>
-
-# Linux:
-
-sudo -u <user name> psql -U <user name> <database name>
+To deploy this project, create a [Heroku Account](https://signup.heroku.com/) and follow the instructions
+Make sure ENV variables are passed to Heroku
+Push to github to trigger th deployment
 
 ## API Design
 
 Base URL (development): http://localhost:3000/api/
 
-Reading all users: GET /animals ===> api/participants/index.js
+Reading all users: GET /participants ===> api/participants/index.js
 
-Creating a new user: POST /animals ===> api/participants/index.js
+Creating a new user: POST /participants ===> api/participants/index.js
 
-Reading a single user: GET /animals/:id ===> api/participants/[participantid].js
+Reading a single user: GET /participants/id ===> api/participants/[participantid].js
 
-Deleting a user: DELETE /animals/:id ===> api/participants/[participantid].js
+Deleting a user: DELETE /participants/id ===> api/participants/[participantid].js
 
-Updating a user: PUT /animals/:id ===> api/participants/[participantid].js
+Updating a user: PUT /participants/id ===> api/participants/[participantid].js
+
+### Figma wireframing
+
+<img src="/public/Wireframes.png" width="900" height="500">
+
+### DrawSQL Database Schema
+
+<img src="/public/database.png" width="900" height="500">

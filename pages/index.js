@@ -140,7 +140,11 @@ export default function Home(props) {
                 </ul>
               </div>
               <div>
-                <Button css={buttonStyles} href="/signup">
+                <Button
+                  aria-label="redirect to signup page"
+                  css={buttonStyles}
+                  href="/signup"
+                >
                   Let`s get started!
                 </Button>
               </div>

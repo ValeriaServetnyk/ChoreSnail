@@ -193,7 +193,6 @@ export default function UserDashboard(props: Props) {
     const newState = [...projectsList, createdProject];
     setProjectsList(newState);
     setNewProjectName('');
-    // console.log(createdProject);
     await router.push(`/projects/${createdProject.id}`);
   }
 
@@ -250,7 +249,11 @@ export default function UserDashboard(props: Props) {
             Welcome to your dashboard {props.user.username}
           </h1>
 
-          <Button css={buttonStyles} onClick={handleClickOpen}>
+          <Button
+            aria-label="add new project and redirect to the next page"
+            css={buttonStyles}
+            onClick={handleClickOpen}
+          >
             Create new project
           </Button>
 
