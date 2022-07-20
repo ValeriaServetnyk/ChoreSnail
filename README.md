@@ -22,7 +22,7 @@ Responsive web app for dividing the load of the household projects equally among
 <div><img src="/public/app5.png" width="300" height="580">
 <img src="/public/app6.png" width="300" height="580"></div>
 <img src="/public/app7.png" width="300" height="580">
-<img src="/public/app8.png" width="580" height="380">
+<img src="/public/app8.png" width="800" height="300">
 
 ## Setup
 
