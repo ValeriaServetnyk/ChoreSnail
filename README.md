@@ -9,20 +9,20 @@ Responsive web app for dividing the load of the household projects equally among
 
 **Technologies:**
 
-Client: Next.js, React, Typescript, Emotion JS, Material UI
-Server: Node.js, PostgreSQL
-Testing: Playwright, Jest
+- Client: Next.js, React, Typescript, Emotion JS, Material UI
+- Server: Node.js, PostgreSQL
+- Testing: Playwright, Jest
 
 ## User roadmap
 
-<img src="/public/app1.png" width="380" height="580">
-<img src="/public/app2.png" width="380" height="580">
-<img src="/public/app3.png" width="380" height="580">
-<img src="/public/app4.png" width="380" height="580">
-<img src="/public/app5.png" width="380" height="580">
-<img src="/public/app6.png" width="380" height="580">
-<img src="/public/app7.png" width="380" height="580">
-<img src="/public/app8.png" width="380" height="580">
+<div><img src="/public/app1.png" width="300" height="580">
+<img src="/public/app2.png" width="300" height="580"></div>
+<div><img src="/public/app3.png" width="300" height="580">
+<img src="/public/app4.png" width="300" height="580"></div>
+<div><img src="/public/app5.png" width="300" height="580">
+<img src="/public/app6.png" width="300" height="580"></div>
+<img src="/public/app7.png" width="300" height="580">
+<img src="/public/app8.png" width="580" height="380">
 
 ## Setup
 
@@ -74,14 +74,14 @@ yarn start
 
 # Libraries
 
-Postgres.js
-@emotion/css
-JS Cookie
-dotenv-safe
-ley
-bcrypt
-nodemailer
-Gmail API
+- Postgres.js
+- @emotion/css
+- JS Cookie
+- dotenv-safe
+- ley
+- bcrypt
+- nodemailer
+- Gmail API
 
 ## Deployment
 
@@ -104,6 +104,8 @@ Deleting a user: DELETE /participants/id ===> api/participants/[participantid].j
 Updating a user: PUT /participants/id ===> api/participants/[participantid].js
 
 ### Figma wireframing
+
+https://www.figma.com/file/cIloP00K6DrXGd2A6B00TB/Prototype-final-project?node-id=0%3A1
 
 <img src="/public/Wireframes.png" width="900" height="500">
 
