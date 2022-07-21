@@ -211,7 +211,8 @@ export default function Chores(props) {
             <List>
               {props.chores.map((chore) => {
                 return (
-                  <div key={`chore-${chore.id}`}>
+                  <div key={`chore-${chore.id}`}
+                  data-test-id={`chores-page-chores-${chore.id}`}>
                     <ListItem>
                       <AspectRatio
                         sx={{
@@ -255,18 +256,6 @@ export default function Chores(props) {
               })}
             </List>
           </Sheet>
-          {/* <span css={totalContainer}>
-            Total project load{totalWeight}
-            {/* {totalWeight <= 10 ? (
-              <div>😁</div>
-            ) : totalWeight <= 20 ? (
-              <div>🙄</div>
-            ) : totalWeight <= 30 ? (
-              <div>🤨</div>
-            ) : (
-              <div>🥵</div>
-            )} */}
-
           <div css={buttonContainer}>
             <Button
               css={buttonStyles}

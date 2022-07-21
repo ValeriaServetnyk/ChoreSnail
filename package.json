@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "next lint",
     "migrate": "dotenv ley",
-    "heroku-postbuild": "yarn migrate up && yarn build"
+    "heroku-postbuild": "yarn migrate up && yarn build",
+    "test": "jest"
   },
   "dependencies": {
     "@emotion/react": "^11.9.3",
@@ -35,8 +36,10 @@
   "devDependencies": {
     "@babel/eslint-parser": "7.18.2",
     "@next/eslint-plugin-next": "12.1.6",
+    "@playwright/test": "^1.23.4",
     "@types/bcrypt": "^5.0.0",
     "@types/cookie": "^0.5.1",
+    "@types/jest": "^28.1.6",
     "@types/js-cookie": "^3.0.2",
     "@types/node": "17.0.41",
     "@types/nodemailer": "^6.4.4",
@@ -61,6 +64,8 @@
     "eslint-plugin-sonarjs": "0.13.0",
     "eslint-plugin-testing-library": "5.5.1",
     "eslint-plugin-unicorn": "42.0.0",
+    "jest": "^28.1.3",
+    "jest-environment-jsdom": "^28.1.3",
     "ley": "^0.7.1",
     "typescript": "4.7.3"
   },

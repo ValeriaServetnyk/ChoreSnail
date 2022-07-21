@@ -157,20 +157,6 @@ export default function UserDashboard(props: Props) {
     setOpen(false);
   };
 
-  // useEffect(() => {
-  //   async function getProjects() {
-  //     const response = await fetch('/api/projects');
-
-  //     const projects = await response.json();
-  //     setProjectsList(projects);
-  //   }
-  //   getProjects().catch(() => {
-  //     console.log('request failed');
-  //   });
-  // }, []);
-
-  // add project to the api on button click
-
   async function createProjectsHandler() {
     const response = await fetch('/api/projects', {
       method: 'POST',
@@ -306,7 +292,7 @@ export default function UserDashboard(props: Props) {
 
           {/* dialog box closed */}
           <div css={secondHeader}>
-            <h1>My past projects</h1>
+            <h2>My past projects</h2>
           </div>
           <Card sx={{ minWidth: 275 }} css={cardElements}>
             {projectsList.length === 0 ? (

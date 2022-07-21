@@ -99,7 +99,7 @@ export default function Home(props) {
         <main css={pageLayout}>
           <div>
             <h1 css={titleStyles}>END INEQUALITY</h1>
-            <h1>when it comes to house chores!</h1>
+            <h2>when it comes to house chores!</h2>
           </div>
 
           <div css={heroContainerStyles}>
