@@ -121,7 +121,27 @@ const buttonContainer = css`
   text-align: right;
 `;
 
-export default function Project(props) {
+// export type Participant = {
+//   id: number;
+//   projectId: number;
+//   participantEmail: string;
+//   participantName: string;
+// };
+
+// type Props = {
+//   participants: Participant;
+//   project: Project;
+//   csrfToken: string;
+//   errors: string[];
+// };
+
+// type Project = {
+//   id: number;
+//   projectName: string;
+//   creatorId: number;
+// };
+
+export default function Participants(props) {
   const [participantsList, setParticipantsList] = useState([]);
 
   // set the list to inactive and once the button edit clicked turn the id of the line into active
@@ -142,8 +162,6 @@ export default function Project(props) {
   useEffect(() => {
     setParticipantsList(props.participants);
   }, [props.participants]);
-
-  // add participants to the api on button click
 
   async function createParticipantHandler() {
     const response = await fetch(
@@ -222,9 +240,10 @@ export default function Project(props) {
     setParticipantsList(newState);
   }
   // if there is an error in the props, return a h1 element with the error message
-  if (props.error) {
-    return <h1>{props.error}</h1>;
+  if (props.errors) {
+    return <h1>{props.errors}</h1>;
   }
+
   if (!props.project) {
     return (
       <div>
@@ -454,12 +473,11 @@ export async function getServerSideProps(context) {
   // create a function that takes project id and user id and checks if user is owner of the project
 
   const isOwner = await isCreator(user.id, context.query.projectId);
-  // console.log('isOwner', isOwner);
   if (!isOwner) {
     // return error message in props
     return {
       props: {
-        error: 'You are not the owner of this project',
+        errors: ['You are not the owner of this project'],
       },
     };
   }

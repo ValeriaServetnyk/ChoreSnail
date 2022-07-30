@@ -7,6 +7,10 @@ setPostgresDefaultsOnHeroku();
 
 config();
 
+// declare module globalThis {
+//   let postgresSqlClient: ReturnType<typeof postgres> | undefined;
+// }
+
 // connect only once to database to prevent running out of slots
 
 function connectOneTimeToDatabase() {
@@ -24,13 +28,30 @@ function connectOneTimeToDatabase() {
 
 const sql = connectOneTimeToDatabase();
 
-export async function getChores() {
-  const chores = await sql`
-SELECT * from chores`;
-  return camelcaseKeys(chores);
-}
+// export type Chore = {
+//   id: number;
+//   name: string;
+//   weight: number;
+//   creatorId: number;
+//   iconName: string;
+// };
 
-// to return participant by id
+// export type Project = {
+//   id: number;
+//   projectName: string;
+//   creatorId: number;
+//   projectStepId: number;
+// };
+
+// export type Participant = {
+//   id: number;
+//   projectId: number;
+//   participantEmail: string;
+//   participantName: string;
+// };
+
+// participants
+
 export async function getParticipantById(id) {
   const [participant] = await sql`
 SELECT * from project_participants
@@ -91,6 +112,20 @@ WHERE id=${id}
   return camelcaseKeys(participant);
 }
 
+// write a function that sets assigned participant id on project_chores table of multiple chore ids
+export async function setAssignedParticipantId(
+  projectId,
+  choreIds,
+  participantId,
+) {
+  const chores =
+    await sql`update project_chores set assigned_participant_id = ${participantId} where chore_id in ${sql(
+      choreIds,
+    )} and project_id = ${projectId}  RETURNING *`;
+
+  return chores.map((chore) => camelcaseKeys(chore));
+}
+
 // routes for project table
 
 export async function getProjects() {
@@ -135,6 +170,15 @@ WHERE id=${id}
 
 // backend for user registration
 
+// export type User = {
+//   id: number;
+//   username: string;
+// };
+
+// type UserWithPasswordHash = User & {
+//   passwordHash: string;
+// };
+
 export async function createUser(username, passwordHash) {
   const [user] = await sql`
 INSERT INTO users
@@ -176,15 +220,12 @@ WHERE id = ${userId}`;
   return user && camelcaseKeys(user);
 }
 
-export async function deleteSessionByToken(token) {
-  const [session] = await sql`
-  DELETE FROM sessions
-  WHERE
- sessions.token = ${token}
- RETURNING *
- `;
-  return session && camelcaseKeys(session);
-}
+// type Session = {
+//   id: number;
+//   token: string;
+// };
+
+// type SessionWithCSRFSecret = Session & { csrfSecret: string };
 
 export async function deleteExpiredSessions() {
   const sessions = await sql`
@@ -227,6 +268,16 @@ export async function getValidSessionByToken(token) {
 
   await deleteExpiredSessions();
 
+  return session && camelcaseKeys(session);
+}
+
+export async function deleteSessionByToken(token) {
+  const [session] = await sql`
+  DELETE FROM sessions
+  WHERE
+ sessions.token = ${token}
+ RETURNING *
+ `;
   return session && camelcaseKeys(session);
 }
 
@@ -284,6 +335,14 @@ AND
   return project && camelcaseKeys(project);
 }
 
+// Chores
+
+export async function getChores() {
+  const chores = await sql`
+SELECT * from chores`;
+  return camelcaseKeys(chores);
+}
+
 // create a function that inserts list of chore ids into project_chores table
 export async function insertChoresIntoProject(projectId, choreIds) {
   // loop over chore ids and create a list of lists containing projectId and a chore id for each chore
@@ -314,20 +373,6 @@ WHERE
  project_chores.project_id = ${projectId}
 AND
  project_chores.chore_id = chores.id`;
-  return chores.map((chore) => camelcaseKeys(chore));
-}
-
-// write a function that sets assigned participant id on project_chores table of multiple chore ids
-export async function setAssignedParticipantId(
-  projectId,
-  choreIds,
-  participantId,
-) {
-  const chores =
-    await sql`update project_chores set assigned_participant_id = ${participantId} where chore_id in ${sql(
-      choreIds,
-    )} and project_id = ${projectId}  RETURNING *`;
-
   return chores.map((chore) => camelcaseKeys(chore));
 }
 

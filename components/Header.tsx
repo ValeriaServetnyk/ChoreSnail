@@ -62,7 +62,14 @@ const emptyButtonStyles = css`
   }
 `;
 
-export default function Header(props) {
+type Props = {
+  user: {
+    id: number;
+    username: string;
+  };
+};
+
+export default function Header(props: Props) {
   return (
     <Container>
       <header css={headerStyles}>
@@ -76,7 +83,7 @@ export default function Header(props) {
             />
           </div>
           <div>
-            <Link href="/" cursor="pointer">
+            <Link href="/">
               <a css={logoStyles}>ChoreSnail</a>
             </Link>
           </div>
