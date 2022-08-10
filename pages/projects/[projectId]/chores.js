@@ -109,14 +109,14 @@ const breadcrumbsStyles = css`
   font-family: Nunito;
 `;
 
-const totalContainer = css`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-  gap: 20px;
-  margin-bottom: 10px;
-`;
+// const totalContainer = css`
+//   display: flex;
+//   flex-direction: row;
+//   align-items: center;
+//   justify-content: center;
+//   gap: 20px;
+//   margin-bottom: 10px;
+// `;
 
 const errorMessageStyles = css`
   font-family: Nunito;
@@ -211,8 +211,10 @@ export default function Chores(props) {
             <List>
               {props.chores.map((chore) => {
                 return (
-                  <div key={`chore-${chore.id}`}
-                  data-test-id={`chores-page-chores-${chore.id}`}>
+                  <div
+                    key={`chore-${chore.id}`}
+                    data-test-id={`chores-page-chores-${chore.id}`}
+                  >
                     <ListItem>
                       <AspectRatio
                         sx={{
